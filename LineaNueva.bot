@@ -1,0 +1,199 @@
+MODO REINTENTAR ENCENDIDO
+iniciar 
+navegar http://intranetsisact/sisact/Index.aspx
+recuadro 0
+esperar 1
+accion id imgIngresar clic 
+esperar 1
+accion id imgIngresar clic 
+
+accion id HM_Item1_4 clic
+accion id HM_Item1_4_5 clic 
+ESPERAR 1
+accion id HM_Item1_4_5 clic 
+ESPERAR 1
+recuadro i1
+ESPERAR 1
+ACCION ID dllTipoBusqueda ELEGIRXVALOR 01 CLIC
+ACCION ID ddlTipoDocId ELEGIRXTEXTO DNI CLIC
+accion name txtNumeroDocId escribe $NRODOCUMENTO
+ESPERAR 1
+VARIABLE $SINALERTA "SINALERTA"
+VARIABLE $ALERTA  $SINALERTA
+esperar 1
+accion name btnBuscarCliente clic M4
+ESPERAR 1
+accion name btnBuscarCliente clic M4
+@@###############################   alerta No axisten registros de ventas
+VARIABLE $ALERTA
+VARIABLE $EXISTEDEUDAPAGO "No se encuentran registros de ventas para el Cliente."
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @seguir2 SINO @VERIFICARCASO2
+@VERIFICARCASO2
+SI COMPARAR IDENTICO $ALERTA $EXISTEDEUDAPAGO ENTONCES @CASOEXISTEDEUDADEPAGO SINO @SIGUIENTEPASO2
+@CASOEXISTEDEUDADEPAGO
+VARIABLE $ESTADO "PENDIENTE DE ACTIVACION"
+VARIABLE $SUBESTADO "PENDIENTE DE ACTIVACION"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @FinalCaso2
+@seguir2
+@SIGUIENTEPASO2
+
+
+
+@@GUARDAMOS VARIABLE A NECESITAR ------
+VARIABLE $FECHAHOY $$HOY
+FUNCION EXTRAE $FECHAHOY 3 2 GUARDAREN $MESACTUAL
+@@variable fecha venta
+VALORCELDA id tbHistoricoVentas 1 7 GUARDAREN $FechaVenta
+@@variable DES.DOC.VENTA
+VARIABLE $DOCUMENTOVENTA "VENTA NORMAL/ALTA"
+@@VARIABLE OF.VENTA
+VALORCELDA id tbHistoricoVentas 1 6 GUARDAREN $OficinaVenta
+
+VALORCELDA id tbHistoricoVentas 1 4 GUARDAREN $DESVENTA
+
+si comparar IDENTICO $DOCUMENTOVENTA $DESVENTA ENTONCES @ContinuarCaso sino @GenerarReportePendiente
+@GenerarReportePendiente
+VARIABLE $ESTADO "PENDIENTE DE ACTIVACION"
+VARIABLE $SUBESTADO "PENDIENTE DE ACTIVACION"
+CONTINUAREN @FinalPen
+@ContinuarCaso
+@@ ######################################################### CASO 1 PUNTO DE VENTA ###########
+
+@@SALTAMOS PASO CORREGIR INCLUIDO EN VARIABLE ----------------------------------------------------------------------------PENDIENTE CASO 1 PUNTO DE VENTA
+CONTINUAREN @SALTOCASO1
+
+VARIABLE $PACK "PACK"
+SI contenidoen $PACK $OficinaVenta ENTONCES @Reporte1 SINO @SaltarReporte1
+$Reporte1
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "PUNTO DE VENTA"
+continuaren @FinalPuntoVenta
+@SaltarReporte1
+
+@SALTOCASO1
+
+esperar 1
+ACCIONENTABLA ID tbHistoricoVentas "%VENTA NORMAL/ALTA%" 0 TAGNAME A[INDICE:0] CLIC
+ESPERAR 1
+ACCIONENTABLA ID tbHistoricoVentas "%VENTA NORMAL/ALTA%" 0 TAGNAME A[INDICE:0] CLIC
+esperar 1
+ACCIONENTABLA ID tbHistoricoVentas "%VENTA NORMAL/ALTA%" 0 TAGNAME A[INDICE:0] CLIC
+encontrar id tbHistoricoVentasDet
+@@Varible Modelo de equipo 
+esperar 4
+
+variable $inicialCosto 0
+FUNCION CONTARTABLAFILASTR id tbodyDataDet GUARDAREN $filastabla
+VARIABLE $UNO 1
+SI COMPARAR IGUAL $filastabla $UNO ENTONCES @VERIFICAFILAS SINO @CONTINUARFILA2
+@CONTINUARFILA2
+VALORCELDA id tbHistoricoVentasDet 1 8 GUARDAREN $VarPrecioVenta
+VALORCELDA id tbHistoricoVentasDet 2 8 GUARDAREN $VarPrecioVenta2
+
+variable $inicialCosto $VarPrecioVenta2
+variable $inicialCosto
+
+si comparar menor $VarPrecioVenta $iniciarCosto entonces @Selecionar2 sino @Selecionar1
+@selecionar2
+VALORCELDA id tbHistoricoVentasDet 2 3 GUARDAREN $VarModeloEquipo
+VALORCELDA id tbHistoricoVentasDet 2 10 GUARDAREN $VarDescripcionPlan
+FUNCION ULTIMOENTEROSMART $VarDescripcionPlan GUARDAREN $PLANNUMERO
+@@ variable numero de telefono
+VALORCELDA id tbHistoricoVentasDet 2 13 GUARDAREN $NumeroTelefono
+@@ variable campaña
+VALORCELDA id tbHistoricoVentasDet 2 12 GUARDAREN $VarCampana
+variable $VarPrecioVenta $VarPrecioVenta2
+continuaren @SeSeleciono2
+@Selecionar1
+
+@VERIFICAFILAS
+VALORCELDA id tbHistoricoVentasDet 1 3 GUARDAREN $VarModeloEquipo
+VALORCELDA id tbHistoricoVentasDet 1 10 GUARDAREN $VarDescripcionPlan
+FUNCION ULTIMOENTEROSMART $VarDescripcionPlan GUARDAREN $PLANNUMERO
+@@ variable numero de telefono
+VALORCELDA id tbHistoricoVentasDet 1 13 GUARDAREN $NumeroTelefono
+@@ variable campaña
+VALORCELDA id tbHistoricoVentasDet 1 12 GUARDAREN $VarCampana
+
+@SeSeleciono2
+
+@@variable PrecioVenta
+@@ variable descripcion plan
+@@------------##########################################cASO 4 CORPORATIVO 
+
+VARIABLE $BUSSINESS "NUEVA ALTA BUSSINESS"
+
+SI COMPARAR IDENTICO $VarCampana $BUSSINESS entonces @Reporte4 sino @ContinuaReporte4
+@Reporte4
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "CORPORATIVO"
+CONTINUAREN @FinalCaso4Corpotativo
+@ContinuaReporte4
+
+@@condicional activo concretado #######################
+
+VARIABLE $campana "CLARO CONEXION ALTA"
+si comparar identico $VarCampana $campana entonces @ReporteConcretado sino @PendienteRevisar
+@ReporteConcretado
+esperar 1
+VARIABLE $FECHADESOLICITUD $FECHAGESTION
+VARIABLE $FECHADEACTIVACION $FECHAHOY
+VARIABLE $NUEVALINEA $NumeroTelefono
+VARIABLE $SEC "---"	
+VARIABLE $TIPODEPRODUCTO $VarModeloEquipo 	
+VARIABLE $COSTODEEQUIPO	$VarPrecioVenta
+VARIABLE $PLANADQUIRIDO	$VarDescripcionPlan
+VARIABLE $COSTODEPLANADQUIRIDO $PLANNUMERO
+VARIABLE $COSTOSINIGV "CAC"
+
+VARIABLE $PONDERADO "---"
+
+VARIABLE $MODALIDAD "---"
+
+VARIABLE $DEPDEVENTA "LIMA"
+VARIABLE $ESTADOVENTA "VENTA"
+VARIABLE $CAC $OficinaVenta
+VARIABLE $CAMPAA $VarCampana
+VARIABLE $MOTIVO "ACTIVACION"
+VARIABLE $ESTADO "ACTIVO"
+VARIABLE $SUBESTADO "CONCRETADO"
+CONTINUAREN @FinalConcretado
+@PendienteRevisar
+VARIABLE $ESTADO "ACTIVO"
+VARIABLE $SUBESTADO "CONCRETADO"
+CONTINUAREN @FinalPendienteActivacion
+
+
+@@ navegar http://intranetsiacpost/siacpost-frontend/
+@@ IRPOPUP 1
+@@ esperar 1
+@@ accion id imgIngresar clic
+@@ esperar 1
+@@ accion id txtNombreTelefono escribe $NumeroTelefono
+@@ irpopup 1
+@@ recuadro i3
+@@ ATRIBUTO id lblEstado contenido GUARDAREN $VarEstado
+@@ ATRIBUTO id lblMotivo contenido GUARDAREN $VarMotivoEstado
+
+@@ variable $ACTIVOACTIVO "ACTIVO"
+@@ VARIABLE $MOTIVOACTIVACION "ACTIVACION"
+
+@@----------------------------------------------
+@@19)	Se registra en el Excel, la descripción, en este caso es el modelo del equipo.
+@@20)	Se registra en el Excel el precio de venta; en este caso 7.2
+@@21)	Se registra en el Excel descripción del PLAN; en este caso CLARO CONEXIÓN 99.
+@@22)	Se registra en el Excel el nuevo número del cliente: en este caso 992441113.
+@@23)	Se registra en el Excel, EL estado: ACTIVO
+@@24)	Se registra en el Excel, el sub estado: CONCRETADO.
+
+@@Etiqueta finales--------------
+@FinalConcretado
+@FinalPuntoVenta
+@FinalCaso4Corpotativo
+@FinalPendienteActivacion
+@FinalPen
+@FinalCaso2
+
+
+TERMINAR 
