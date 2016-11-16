@@ -51,6 +51,7 @@ navegar http://intranetsiacpost/siacpost-frontend/
 IRPOPUP 1
 esperar 1
 accion id imgIngresar clic
+ESPERAR 2
 accion id txtNombreTelefono escribe $MSISDN
 esperar 1
 irpopup 1
@@ -91,21 +92,21 @@ VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 irpopup 1
 ESPERAR 2
-
+recuadro i2
+variable $Dos 2
+ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFactu
+recuadro -1
 @generarTryCasoVentana55
 accion id tuMen0 clic
 ESPERAR 2
-accion id op_0_6 clic O5
-esperar 6
 accion id op_0_6 clic O4
-esperar 1
+esperar 4
 accion id op_0_6 clic O3
 esperar 1
 variable $dos 2
 variable $contador 3
 variable $UnoUno 1
 esperar 5
-
 ATRIBUTO id lblPlanActual contenido GUARDAREN $lblPlanActualCliente
 esperar 2
 CANTIDADPOPUPS GUARDAREN $POPUP
@@ -123,11 +124,65 @@ SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTE12 SINO @VERIFICARCAS
 @@
 SI COMPARAR IDENTICO $ALERTA $EXISTEPROGRAMACIONES ENTONCES @CASOEXISTEPROGRAMACIONES SINO @SIGUIENTEPASO12
 @CASOEXISTEPROGRAMACIONES
+irpopup 1
+accion id tuMen2 clic
+accion id op_2_3 clic
+ESPERAR 1
+accion id op_2_3 clic
+esperar 4
+irpopup 3
+listarpopups
+encontrar id dgInteracion
+
+esperar 3
+variable $TIPIFICACION "POSTPAGO - VARIACIÓN - ESTADO DE LA LÍNEA/CLIENTE - MIGRACIÓN DE PLAN"
+VARIABLE $EMARIO "E326543"
+VARIABLE $EJAMES "E331161"
+VARIABLE $JAMES "JAMES"
+variable $MARIO "MARIO"
+
+CANTIDADPOPUPS GUARDAREN $POPUP
+VARIABLE $cuatro 4
+SI COMPARAR IGUAL $POPUP $cuatro ENTONCES @continuarsinerror SINO @erroreniniciarventana
+@erroreniniciarventana
+VARIABLE $ESTADO "ERROR"
+VARIABLE $SUBESTADO "ERROR LANTECIA DE SISTEMA"
+VARIABLE $BACKOFFICE "-BOOT-!"
+variable $CF1 $CF 
+@continuarsinerror
+VALORCELDA id dgInteracion 1 2 GUARDAREN $TIPIFICACION1
+VALORCELDA id dgInteracion 1 3 GUARDAREN $login
+
+SI COMPARAR IDENTICO $TIPIFICACION1 TIPIFICACION entonces @SEPROGRAMOVERIF SINO @VERIFICAREJAMES1
+@SEPROGRAMOVERIF
+SI COMPARAR IDENTICO $login $EMARIO entonces @SIESTAINCLUIDOMARIO SINO @NOESTAINCLUIDOMARIO
+@NOESTAINCLUIDOMARIO
+SI COMPARAR IDENTICO $login $EJAMES entonces @SIESTAINCLUIDOJAMES SINO @NOESTAINCLUIDOJAMES
+@NOESTAINCLUIDOJAMES
+@VERIFICAREJAMES1
 VARIABLE $ESTADO "PENDIENTE POR REVISAR"
 VARIABLE $SUBESTADO "PROGRAMACIONES PENDIENTES"
 VARIABLE $BACKOFFICE "-BOOT-"
 variable $CF1 $CF 
-CONTINUAREN @FinalCaso12
+CONTINUAREN @FINALPROGRAMACION
+
+@SIESTAINCLUIDOMARIO
+@SIESTAINCLUIDOJAMES
+variable $Dos 2
+FUNCION EXTRAE $FECHAHOY 0 2 GUARDAREN $DiaActual
+funcion evalua $VarClicoFactu-$Dos guardaren $CicloMenosDos
+si comparar menorigual $DiaActual $CicloMenosDos entonces @ReporteFinal sino @Verificar
+@ReporteFinal
+VARIABLE $ESTADO "SE PROGRAMO"
+VARIABLE $SUBESTADO $VariablePendienteOctubre
+variable $CF1 $CF 
+CONTINUAREN @SeValido1
+@Verificar
+VARIABLE $ESTADO "SE PROGRAMO"
+VARIABLE $SUBESTADO $VariablePendienteNoviembre
+variable $CF1 $CF 
+@SeValido1
+CONTINUAREN @FINALSEPROGRAMO
 @SIGUIENTEPASO12
 @SIGUIENTE12
 
@@ -150,7 +205,6 @@ ATRIBUTO id lblDisputa contenido GUARDAREN $VarDisputa
 VARIABLE $UNO 0
 COMPARAR IGUAL $VarDisputa $UNO;
 SI COMPARAR IGUAL $VarDisputa $UNO ENTONCES @CONTINUAR3 SINO @reporteCaso3
-@@
 @CONTINUAR3
 CONTINUAREN @SIGUIENTE2
 @reporteCaso3
@@ -164,13 +218,9 @@ CONTINUAREN @FinalCaso2
 @seguir2
 @SIGUIENTEPASO2
 recuadro -1
-
-@@--------@@#######################-----caso 10
 VARIABLE $ALERTA
 ESPERAR 1
-@@-----------------------------JL04: Con la siguiente instrucción creamos una variable para poder comparar el mensaje
 VARIABLE $EXISTEALERTA10 "Existe Bloqueo/Suspensión en el Contrato"
-@@-----------------------------JL05: Con la siguiente instrucción verificamos si es que hubo o no alerta, si hubo verifico cual fue, si no hubo sigo en @SIGUIENTEPASO
 SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASO10 SINO @VERIFICARCASO10
 @VERIFICARCASO10
 @@-----------------------------JL06: Con la siguiente instrucción compruebo si el mensaje de la alerta es igual al de $EXISTEALERTA10, si son iguales grabo mi caso, sino continuo
@@ -184,10 +234,7 @@ variable $CF1 $CF
 CONTINUAREN @FinalCaso10
 @continuar10
 @SIGUIENTEPASO10
-@@
 irpopup 2
-
-
 esperar 1 
 si contenidoen {$control} id lblPlanActual entonces @reporteCasoControl sino @ContinuarControl
 @reporteCasoControl
@@ -197,12 +244,10 @@ VARIABLE $BACKOFFICE "-BOOT-"
 variable $CF1 $CF 
 CONTINUAREN @FinalErrorSistemaControl
 @ContinuarControl
-
 ATRIBUTO id lblDniRuc contenido GUARDAREN $VarDni
 ATRIBUTO id lblTelefono contenido GUARDAREN $VarTelefono
 esperar 1
 ATRIBUTO id lblCliente contenido GUARDAREN $VarCliente
-
 esperar 1
 ATRIBUTO id lblTopeConsumoActual contenido GUARDAREN $VarTope1
 funcion extrae $VarTope1 0 20 guardaren $VarTope
@@ -213,7 +258,6 @@ esperar 1
 accion id btnCerrar clic
 esperar 1
 ELIMINARULTIMOPOPUP
-
 irpopup 1
 recuadro i4
 variable $contador 3
@@ -224,18 +268,14 @@ VARIABLE $TRES 3
 @generarTry
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
-
 accion id btnFacturacion clic M3
 ESPERAR 1
 accion id btnFacturacion clic M3
 ESPERAR 1
 VARIABLE $ALERTA
 VARIABLE $EXISTEPOSTPAGO "Alerta factura."
-
 SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASO13ALERTA SINO @VERIFICARCASO13ALERTA
-
 @VERIFICARCASO13ALERTA
-@@
 SI COMPARAR identico $ALERTA $EXISTEPOSTPAGO ENTONCES @CASOEXISTEALERT SINO @GO
 @CASOEXISTEALERT
 VARIABLE $ESTADO "CAIDA"
@@ -265,12 +305,8 @@ CONTINUAREN @SALTOCICLO
 @NOCALCULARCICLO
 ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFacturacion
 @SALTOCICLO
-
 funcion evalua $VarClicoFacturacion-$Dos guardaren $CicloMenosDos
-
-
 variable $CicloMenosDos
-
 @@-2----############################---caso 14   956256478---LISTO
 ATRIBUTO id lblModalidad contenido GUARDAREN $VarModalidad
 variable $Corporativo "Corporativo - JANUS"
@@ -288,9 +324,7 @@ esperar 1
 recuadro i3
 @@---extraigo ¿variable plan para una futura accion (caso 20)
 ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
-
 ATRIBUTO id lblCombo contenido GUARDAREN $VarComboPlan
-
 @@-----############################---Caso 18---listo
 ATRIBUTO id lblEstado contenido GUARDAREN $VarEstado
 variable $VarEstadoDesactivo "Desactivo"
@@ -306,23 +340,12 @@ VARIABLE $BACKOFFICE "-BOOT-"
 variable $CF1 $CF 
 CONTINUAREN @FinalCaso18
 @siguiente18
-
 recuadro -1
 recuadro i2
 esperar 3
 @@-------##########################-Caso 8 ----listo------PENDIENTE TOPE 0 = 5  preguntar a janes
-@@ variable $VarLimite
-@@ variable $nada "$boton1"
-@@ATRIBUTO id btnTotalCtas contenido GUARDAREN $boton1
-@@ variable $boton $boton1
-@@ si comparar identico $boton $nada entonces @buscardenuevo sino @continuar
-@@ @continuar
-
 ATRIBUTO id lblLimiteCredito contenido GUARDAREN $VarLimite
 FUNCION ULTIMOENTEROSMART $5TONIVEL GUARDAREN $PLAN1
-
-
-
 COMPARAR MENOR $VarLimite $PLAN1;
 encontrar id 0
 SI COMPARAR MENOR $VarLimite $PLAN1 ENTONCES @reporteCaso8 SINO @CONTINUAR8
@@ -337,7 +360,6 @@ CONTINUAREN @FinalCaso8
 @SiguerCaso8
 RECUADRO -1
 esperar 1
-
 irpopup 2
 @@comparar todos los campos de la fila variable y sacar un promedio
 @@
@@ -353,7 +375,6 @@ variable $Diez10 10
 encontrar id 0
 @@convirtiendo en positivo la diferencia entre nuevo plan y cargo fijo
 VARIABLE $CERO 0
-
 SI COMPARAR menor $ValorCF1 $CERO entonces @convertirpositivo sino @continuarpositivo 
 @convertirpositivo
 si comparar mayor $ValorCF1 $Diez10 entonces @funciondosdecimales sino @funcionundecimal
@@ -364,7 +385,6 @@ continuaren @seguirdosdecimales
 FUNCION EXTRAE $valorCF1 1 1 GUARDAREN $valorCF
 @seguirdosdecimales
 @continuarpositivo
-
 si comparar mayor $valorCF $Diez10 ENTONCES @VerificaFactura sino @seguirCasoDownsell
 @VerificaFactura
 ESPERAR 1
@@ -516,6 +536,9 @@ variable $UnoUno 1
 variable $cinco 5
 @@saltar para atraz--btFactura
 @generarTryInteracion
+
+
+
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
 esperar 1
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
@@ -566,7 +589,7 @@ CONTINUAREN @FinalCaso20
 @CONTINUAR20
 
 
-@@--------@@#######################-----caso ----PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+@@--------@@#######################-----caso --05--PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
 
 variable $5TONIVEL
 variable $PLANTEXTO "plan"
@@ -578,7 +601,7 @@ esperar 1
 SI contenidoenlinea {$5TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas ENTONCES @verificar05e SINO @reporteCaso5
 @reporteCaso5
 VARIABLE $ESTADO "PENDIENTE POR REVISAR"
-VARIABLE $SUBESTADO "MALA INTERACCION CRM"
+VARIABLE $SUBESTADO "MALA INTERACCION SPP"
 VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @FinalCaso5
 @verificar05e
@@ -610,30 +633,21 @@ si comparar igual $contador1 $cerocero @SalirErrorCasoVen5 sino @generarTryCasoV
 @@--------@@#######################-----caso 19
 @@
 irpopup 5
-
-
 @@--------------------------------------------------------------
 @@--------@@#######################-----caso 04
 esncontrar id aaa
 irpopup 5
 esperar 1
 ATRIBUTO ID SIACPO_DAC1_cboDAC ELEGIDOVALOR GUARDAREN $VarCombo
-
 accion id txtNota clic
 accion id txtNota escribe $texto
 esperar 1
 variable $VarClicoFacturacion
 variable $detexto "de"
 variable $VarComboPlan
-
 esperar 1
 @@creamos un salto hasta corregir mala interacion spp------------------------------------------------------
 @@DATO NO RELEVANTE 
-@@ SI contenidoenlinea {$VarPlan,$PLANTEXTO,$actual} id txtNota ENTONCES @ConCaso52 SINO @reporteCaso52
-@@ @reporteCaso52
-@@ SI contenidoenlinea {$VarComboPlan,$PLANTEXTO,$actual} id txtNota ENTONCES @ConCaso521 SINO @reporteCaso521
-@@ @ConCaso521
-@@ @ConCaso52
 
 ESPERAR 1
 si contenidoenlinea {$clico,$VarClicoFacturacion,$detexto} id txtNota entonces @verificaCasospp sino @reporteCasospp
@@ -662,7 +676,6 @@ VARIABLE $BACKOFFICE "-BOOT-"
 continuaren @finalCaso15
 @siguienteCaso15
 accion id SIACPO_DAC1_cboDAC ELEGIRXTEXTO TELEVENTAS
-
 ATRIBUTO id txtMontoSIGA value GUARDAREN $lblReintegroApadece
 variable $CERO 0 
 variable $chip "CHIP"
@@ -675,7 +688,6 @@ VARIABLE $ESTADO "PENDIENTE POR REVISAR"
 VARIABLE $SUBESTADO "MALA INTERACCION SPP"
 VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @fINALCRM2
-
 @ContinuarCRM2
 SI contenidoenlinea {$TextoNuevo,$TextoPlan,$chip} id txtNota ENTONCES @REPEQUIPO SINO @CONTEQUIPO
 @REPEQUIPO
@@ -685,7 +697,6 @@ VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @fINALCRM2EQUIPO
 @CONTEQUIPO
 @SEGUIRPROCESOCRM2
-
 ESPERAR 1
 ACCION ID btnNuevoPlanArma clic M2
 ACCION ID btnNuevoPlanArma clic M2
@@ -697,7 +708,6 @@ esperar 1
 accion id rdbSinTopeConsumo clic
 accion id rdbSinTopeConsumo clic
 ESPERAR 1
-
 @@ EMPEZAMOS CON EL PRIMER COMBO -----------------------------------------------------------------------------------------------------------
 si comparar igual $lblReintegroApadece $CERO entonces @SelecionarChip sino @SelecionarEquipo
 @SelecionarChip
@@ -710,70 +720,60 @@ accion id dgLista_optSel_9 clic
 accion id dgLista_optSel_9 clic 
 continuaren @SeDioClick01
 @ContinuaVerificando01
-
 si comparar identico $ClaroMax39Chip $5TONIVEL ENTONCES @DarClick02 sino @ContinuaVerificando02
 @DarClick02
 accion id dgLista_optSel_10 clic 
 accion id dgLista_optSel_10 clic 
 continuaren @SeDioClick02
-@ContinuaVerificando02
-
+@ContinuaVerificando0
 si comparar identico $ClaroMax49Chip $5TONIVEL ENTONCES @DarClick03 sino @ContinuaVerificando03
 @DarClick03
 accion id dgLista_optSel_11 clic 
 accion id dgLista_optSel_11 clic 
 continuaren @SeDioClick03
 @ContinuaVerificando03
-
 si comparar identico $ClaroMax59Chip $5TONIVEL ENTONCES @DarClick04 sino @ContinuaVerificando04
 @DarClick04
 accion id dgLista_optSel_12 clic 
 accion id dgLista_optSel_12 clic 
 continuaren @SeDioClick04
 @ContinuaVerificando04
-
 si comparar identico $ClaroMax79Chip $5TONIVEL ENTONCES @DarClick05 sino @ContinuaVerificando05
 @DarClick05
 accion id dgLista_optSel_13 clic 
 accion id dgLista_optSel_13 clic 
 continuaren @SeDioClick05
 @ContinuaVerificando05
-
 si comparar identico $ClaroMax99Chip $5TONIVEL ENTONCES @DarClick06 sino @ContinuaVerificando06
 @DarClick06
 accion id dgLista_optSel_4 clic 
 accion id dgLista_optSel_4 clic 
 continuaren @SeDioClick06
 @ContinuaVerificando06
-
 si comparar identico $ClaroMax149Chip $5TONIVEL ENTONCES @DarClick07 sino @ContinuaVerificando07
 @DarClick07
 accion id dgLista_optSel_5 clic 
 accion id dgLista_optSel_5 clic 
 continuaren @SeDioClick07
 @ContinuaVerificando07
-
 si comparar identico $ClaroMax119Chip $5TONIVEL ENTONCES @DarClick08 sino @ContinuaVerificando08
 @DarClick08
 accion id dgLista_optSel_14 clic 
 accion id dgLista_optSel_14 clic 
 continuaren @SeDioClick08
 @ContinuaVerificando08
-
 si comparar identico $ClaroMax189Chip $5TONIVEL ENTONCES @DarClick09 sino @ContinuaVerificando09
 @DarClick09
 accion id dgLista_optSel_15 clic 
 accion id dgLista_optSel_15 clic 
 continuaren @SeDioClick09
 @ContinuaVerificando09
-
 si comparar identico $ClaroMax189Chip $5TONIVEL ENTONCES @DarClick10 sino @ContinuaVerificando10
 @DarClick10
 accion id dgLista_optSel_16 clic 
 accion id dgLista_optSel_16 clic 
 continuaren @SeDioClick10
 @ContinuaVerificando10
-
 @SeDioClick10
 @SeDioClick09
 @SeDioClick08
@@ -788,7 +788,6 @@ continuaren @SaltoChip
 @SelecionarEquipo
 accion id ddlModalidad ELEGIRXTEXTO Equipo
 accion id ddlFamilia ELEGIRXTEXTO Local
-
 @@COLOCAR VALIDACION DE PLANES EQUIPO 
 si comparar identico $ClaroMax29 $5TONIVEL ENTONCES @DarClick11 sino @ContinuaVerificando11
 @DarClick11
@@ -796,35 +795,30 @@ accion id dgLista_optSel_1 clic
 accion id dgLista_optSel_1 clic 
 continuaren @SeDioClick11
 @ContinuaVerificando11
-
 si comparar identico $ClaroMax49 $5TONIVEL ENTONCES @DarClick12 sino @ContinuaVerificando12
 @DarClick12
 accion id dgLista_optSel_2 clic 
 accion id dgLista_optSel_2 clic 
 continuaren @SeDioClick12
 @ContinuaVerificando12
-
 si comparar identico $ClaroMax39 $5TONIVEL ENTONCES @DarClick13 sino @ContinuaVerificando13
 @DarClick13
 accion id dgLista_optSel_3 clic 
 accion id dgLista_optSel_3 clic 
 continuaren @SeDioClick13
 @ContinuaVerificando13
-
 si comparar identico $ClaroMax79 $5TONIVEL ENTONCES @DarClick14 sino @ContinuaVerificando14
 @DarClick14
 accion id dgLista_optSel_4 clic 
 accion id dgLista_optSel_4 clic 
 continuaren @SeDioClick14
 @ContinuaVerificando14
-
 si comparar identico $ClaroMax99 $5TONIVEL ENTONCES @DarClick15 sino @ContinuaVerificando15
 @DarClick15
 accion id dgLista_optSel_5 clic 
 accion id dgLista_optSel_5 clic 
 continuaren @SeDioClick15
 @ContinuaVerificando15
-
 si comparar identico $ClaroMax189 $5TONIVEL ENTONCES @DarClick16 sino @ContinuaVerificando16
 @DarClick16
 accion id dgLista_optSel_6 clic 
@@ -837,21 +831,18 @@ accion id dgLista_optSel_7 clic
 accion id dgLista_optSel_7 clic 
 continuaren @SeDioClick17
 @ContinuaVerificando17
-
 si comparar identico $ClaroMax119 $5TONIVEL ENTONCES @DarClick18 sino @ContinuaVerificando18
 @DarClick18
 accion id dgLista_optSel_8 clic 
 accion id dgLista_optSel_8 clic 
 continuaren @SeDioClick18
 @ContinuaVerificando18
-
 si comparar identico $ClaroMax59 $5TONIVEL ENTONCES @DarClick19 sino @ContinuaVerificando19
 @DarClick19
 accion id dgLista_optSel_9 clic 
 accion id dgLista_optSel_9 clic 
 continuaren @SeDioClick19
 @ContinuaVerificando19
-
 si comparar identico $ClaroMax149 $5TONIVEL ENTONCES @DarClick20 sino @ContinuaVerificando20
 @DarClick20
 accion id dgLista_optSel_10 clic 
@@ -931,33 +922,46 @@ VARIABLE $SINAPADECE 0
 esperar 1
 SI COMPARAR IGUAL $SINAPADECE $lblApadece ENTONCES @continuarCaso19 SINO @ReporteCaso19
 @ReporteCaso19
-VARIABLE $ESTADO "SE PROGRAMO"
+VARIABLE $ESTADO "CAIDA"
 VARIABLE $SUBESTADO "APADECE"
 VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @FINALAPADECE
 @continuarCaso19
-
+@@ @solograbar
+VARIABLE $SINALERTA "SINALERTA"
+VARIABLE $ALERTA  $SINALERTA
+esperar 1
+accion id btnGrabar clic M4
+esperar 1
+accion id btnGrabar clic M4
+ESPERAR 2
+VARIABLE $ALERTA
+VARIABLE $EXISTEALERTAEXITOSA "¿Estás seguro de programar la Migración de Plan?"
+encontrar id 0
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASOEXITO SINO @VERIFICARCASO171
+@VERIFICARCASO171
+encontrar id 0
+SI COMPARAR IDENTICO $ALERTA $EXISTEALERTAEXITOSA ENTONCES @CASOEXISTEALERTAEXITOSA SINO @SIGUIENTEPASO1711
+@CASOEXISTEALERTAEXITOSA
 @@continuaren @solograbar
-si comparar menorigual $DiaActual $CicloMenosDos entonces @ReporteFinal sino @Verificar
-@ReporteFinal
+si comparar menorigual $DiaActual $CicloMenosDos entonces @ReporteFinal1 sino @Verificarexito
+@ReporteFinal1
 VARIABLE $ESTADO "SE PROGRAMO"
 VARIABLE $SUBESTADO $VariablePendienteOctubre
 variable $CF1 $CF 
 CONTINUAREN @SeValido
-@Verificar
+@Verificarexito
 VARIABLE $ESTADO "SE PROGRAMO"
 VARIABLE $SUBESTADO $VariablePendienteNoviembre
 variable $CF1 $CF 
 @SeValido
-@@ @solograbar
-accion id btnGrabar clic
-esperar 1
-accion id btnGrabar clic
-@@---accion id btnGrabar clic 5
-@@
+CONTINUAREN @FinalCasOEXITOSO
+@SIGUIENTEPASO1711
+VARIABLE $ESTADO "ERROR"
+VARIABLE $SUBESTADO "ERROR"
+variable $CF1 $CF 
+@SIGUIENTEPASOEXITO
 @@--------@@#######################-----caso 07@@-------------REALIZAMOS SALTO POR QUE AUN NO ESTA EN PRODUCTION
-@@-------------------------   CASUITICA ----TOPES DE CONSUMO ! 0 ENTONCES REINICIAR PROCESO   -POPUP 6
-@@ETIQUETAS FINALES
 @FinalCaso2
 @FinalCaso3
 @FinalCaso4
@@ -989,4 +993,6 @@ accion id btnGrabar clic
 @FinalErrorSistemaControl
 @fINALCRM2
 @fINALCRM2EQUIPO
+@FINALPROGRAMACION
+@FINALSEPROGRAMO
 TERMINAR
