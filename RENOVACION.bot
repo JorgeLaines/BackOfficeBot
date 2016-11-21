@@ -13,14 +13,13 @@ ESPERAR 1
 accion id HM_Item1_4_5 clic 
 ESPERAR 1
 recuadro i1
-ESPERAR 1
+ESPERAR 3
 ACCION ID dllTipoBusqueda ELEGIRXVALOR 02 CLIC
-accion name txtNumeroDocId escribe 986661528
+accion name txtNumeroDocId escribe $NUMERODEVENTA
 
 ACCION ID btnBuscarCliente CLIC
 esperar 10
 encontrar id 0 
-
 VALORCELDA id tbodyData 0 1 GUARDAREN $CLIENTE
 VALORCELDA id tbodyData 0 2 GUARDAREN $TIPODOC
 VALORCELDA id tbodyData 0 4 GUARDAREN $DESDOCVENTA
@@ -30,34 +29,45 @@ VALORCELDA id tbodyData 0 7 GUARDAREN $FECHAVENTA
 VALORCELDA id tbodyData 0 8 GUARDAREN $TIPOVENTA
 VALORCELDA id tbodyData 0 9 GUARDAREN $ACUERDO
 VALORCELDA id tbodyData 0 10 GUARDAREN $VENDEDOR
-
-
 @@comparamos que diga renovacion o vacio 
 @@----PRIMER CONDICION FECHA DENTRO DE RANGO 
 @@FECHA DE VENTA (Mes de búsqueda)
 @@10.2 OFICINA DE VENTA 
 @@10.3 DESCRIPCION DEL DOCUMENTO DE VENTA=Desc. Doc. Venta
 
+
+
+VARIABLE $ECONTENIDO "E3-"
+
+SI contenidoen $ECONTENIDO id tbodyData entonces @ContinuarCasoE sino @SalirCasoE
+@SalirCasoE
+variable $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE SUBESTADO "PENDIENTE POR REVISAR"
+CONTINUAREN @FINALCASOSINE
+@ContinuarCasoE
+
+@@COMPARAMOS SI CONTINENE E 
+
 VARIABLE $RENOVACIONTEXTO "RENOVACIÓN"
 SI COMPARAR IDENTICO $DESDOCVENTA $RENOVACIONTEXTO @continuar01 sino @Selecionar01
 @Selecionar01 
-ACCIONENTABLA ID tbodyData "% %" 0 TAGNAME A[INDICE:0] clic
+@@SELECIONAMOS RENOVACION EN TODO EL DATAGRID
+ACCIONENTABLA ID tbodyData "%E3-%" 0 TAGNAME A[INDICE:0] clic
 esperar 1
-ACCIONENTABLA ID tbodyData "% %" 0 TAGNAME A[INDICE:0] clic
+ACCIONENTABLA ID tbodyData "%E3-%" 0 TAGNAME A[INDICE:0] clic
 CONTINUAREN @SALTO01
 @continuar01
-ACCIONENTABLA ID tbodyData "%RENOVACIÓN%" 0 TAGNAME A[INDICE:0] clic 
+ACCIONENTABLA ID tbodyData "%E3-,RENOVACIÓN%" 0 TAGNAME A[INDICE:0] clic 
 esperar 1
-ACCIONENTABLA ID tbodyData "%RENOVACIÓN%" 0 TAGNAME A[INDICE:0] clic 
+ACCIONENTABLA ID tbodyData "%E3-,RENOVACIÓN%" 0 TAGNAME A[INDICE:0] clic 
 @SALTO01
 encontrar id 0
 ESPERAR 3
 @@OBTENIENDO VALORES
 VALORCELDA id tbodyDataDet 0 13 GUARDAREN $NumeroTelefono
-
 ATRIBUTO id txtNroDocIdentidad VALUE GUARDAREN $VarDNI
-
 ATRIBUTO id txtNroDocRef VALUE GUARDAREN $VarNumeroReferencia
+
 FUNCION EXTRAE $VarNumeroReferencia 0 1 GUARDAREN $NumReferenciaExtraido
 variable $NumeroE "E"
 
@@ -69,23 +79,52 @@ CONTINUAREN @FINALCASO6
 @CONTINUAR02
 
 VARIABLE $FECHAGESTION
+FUNCION EXTRAE $FECHAGESTION 0 10 GUARDAREN $FECHAGESTION1
+VARIABLE $FECHAGESTION $FECHAGESTION1
 
 COMPARAR masantigua $FECHAGESTION $FECHAVENTA
 SI COMPARAR masantigua $FECHAGESTION $FECHAVENTA  ENTONCES @Verificar7 SINO @ContinuarTotal7
 @Verificar7
-FUNCION EXTRAE $FECHAGESTION 3 2 GUARDAREN $MesExcel
-FUNCION EXTRAE $FECHAVENTA 3 2 GUARDAREN $MesActivacion
-variable $MesExcel
-variable $MesActivacion
-si comparar MENORigual $MesExcel $MesActivacion ENTONCES @seguirmenor SINO @verificamenor
+FUNCION EXTRAE $FECHAGESTION 3 2 GUARDAREN $Mesfechagestion
+FUNCION EXTRAE $FECHAVENTA 3 2 GUARDAREN $Mesfechaventa
+variable $Mesfechagestion
+variable $Mesfechaventa
+
+si comparar igual $Mesfechagestion $Mesfechaventa ENTONCES @SiguienteMenos SINO @verMenos
+@verMenos
+si comparar MENOR $Mesfechagestion $Mesfechaventa ENTONCES @seguirmenor SINO @verificamenor
 @verificamenor
 VARIABLE $ESTADO "CAIDA"
-VARIABLE $SUBESTADO "VENTA DE MES SIGUIENTE"
+VARIABLE $SUBESTADO "VENTA DE MES ANTERIOR"
 CONTINUAREN @finalCaso7
 @SIGUIENTEPASO7
 ESPERAR 1
+@SiguienteMenos
 @ContinuarTotal7
 @seguirmenor
+
+@@---------mes actual (siguiente)
+@@-------------------------------
+VARIABLE $FECHAGESTION
+
+COMPARAR masantigua $FECHAVENTA $FECHAGESTION
+SI COMPARAR masantigua $FECHAVENTA $FECHAGESTION @verificar4 sino @ContinuarTota4
+@verificar4 
+FUNCION EXTRAE $FECHAGESTION 3 2 GUARDAREN $Mesfechagestion
+FUNCION EXTRAE $FECHAVENTA 3 2 GUARDAREN $Mesfechaventa
+variable $Mesfechagestion
+variable $Mesfechaventa
+si comparar igual $Mesfechagestion $Mesfechaventa ENTONCES @SiguienteMenos1 SINO @verMenos1
+@verMenos1
+comparar mayor $Mesfechagestion $Mesfechaventa
+si comparar mayor $Mesfechagestion $Mesfechaventa ENTONCES @ReporteCaso4 SINO @SIGUIENTEPASO4
+@ReporteCaso4
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "VENTA DE MES ACTUAL"
+CONTINUAREN @finalCaso7ACTUAL
+@SIGUIENTEPASO4
+@ContinuarTota4
+@SiguienteMenos1
 
 @@COPIAR 
 VALORCELDA id tbodyDataDet 0 12 GUARDAREN $DESCAMPANA
@@ -99,6 +138,18 @@ VALORCELDA id tbodyDataDet 0 5 GUARDAREN $CANT
 VALORCELDA id tbodyDataDet 0 4 GUARDAREN $NUMEROSERIE
 VALORCELDA id tbodyDataDet 0 3 GUARDAREN $DESCRIPCION
 
+
+@@  caso especial solo chip ----------------------
+
+variable $CHIPSUELTO "CHIP SUELTO"
+si comparar identico $CHIPSUELTO $DESCUTIL ENTONCES @SALIRCHIPSUELTO SINO @CONTINUARCASO
+@SALIRCHIPSUELTO
+variable $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE SUBESTADO "PENDIENTE POR REVISAR"
+CONTINUAREN @FINALCASOCHIPSUELTO
+@CONTINUARCASO
+
+
 variable $textofull "FULL"
 
 @@caso coorporativo -------------------------------------------rpt coorporativo
@@ -110,11 +161,18 @@ variable $ESTADO "CAIDA "
 VARIABLE SUBESTADO "CORPORATIVO"
 CONTINUAREN @FINALCASO5
 @Continuarsinreporte
-
-
-
-
 @@PEGAR
+
+VARIABLE $RENCLARO "RENCLARO"
+funcion extrae $DESCUTIL 0 8 GUARDAREN $DESCPLAN001
+
+SI COMPARAR IDENTICO $DESCPLAN001 $RENCLARO ENTONCES @EXISTERENOVACION @NOEXISTESALIR 
+@NOEXISTESALIR
+$ESTADO "PENDIENTE" 
+$SUBESTADO "NO AHY RENOVACION"
+CONTINUAREN @NOEXISTERENOVACION
+@EXISTERENOVACION
+
 
 navegar http://intranetsiacpost/siacpost-frontend/
 IRPOPUP 1
@@ -124,9 +182,18 @@ esperar 2
 accion id txtNombreTelefono escribe $NUMERODEVENTA
 esperar 2
 accion id imgBuscar clic
-esperar 1
+esperar 3
+@@recuadro i2
+@@ATRIBUTO id lblFechaAct contenido GUARDAREN $VarFechaAct1
+@@FUNCION EXTRAE $VarFechaAct1 0 10 GUARDAREN $VarFechaAct
+
+@@recuadro i3
+@@---extraigo ¿variable plan para una futura accion (caso 20)
+@@ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
+@@FUNCION ULTIMOENTEROSMART $VarPlan GUARDAREN $PLANNUMERO
+
+@@RECUADRO -1
 LISTARPOPUPS
-irpopup 2
 @@--eliminando popus campaña diferente
 CANTIDADPOPUPS GUARDAREN $POPUP 
 VARIABLE $TRES 3
@@ -139,14 +206,21 @@ ELIMINARULTIMOPOPUP
 irpopup 1
 accion id tuMen2 clic
 accion id op_2_3 clic
+esperar 1
+accion id op_2_3 clic
+esperar 1
 IRPOPUP 2
 esperar 2
-accion id cmdVerTodos clic 
+accion id cmdVerTodos clic
+ESPERAR 1 
+accion id cmdVerTodos clic
 esperar 4
 listarpopups
 irpopup 3 
 
-@@----############CASO 02
+@@----############CASO 02  sin interaccion spp
+
+
 @@continuaren @Saltointeracion
 @@VARIABLE $VarRenovacion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - RENOVACION DE EQUIPOS"
 
@@ -161,12 +235,12 @@ irpopup 3
 encontrar id 0 
 variable $tipificacion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - RENOVACION DE EQUIPOS"
 
-si contenidoen $tipificacion id dgInteracion entonces @ContinuarTipicacion sino @ReporteCaso02Sininteraccion
-@ReporteCaso02Sininteraccion
-variable $ESTADO "CAIDA"
-VARIABLE $SUBESTADO "SIN INTERACCION SPP"
-CONTINUAREN @FINALCASO2
-@ContinuarTipicacion 
+@@ si contenidoenlinea $tipificacion id dgInteracion entonces @ContinuarTipicacion sino @ReporteCaso02Sininteraccion
+@@ @ReporteCaso02Sininteraccion
+@@ variable $ESTADO "CAIDA"
+@@ VARIABLE $SUBESTADO "SIN INTERACCION SPP"
+@@CONTINUAREN @FINALCASO2
+@@ @ContinuarTipicacion 
 esperar 1 
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - RENOVACION DE EQUIPOS" 0 TAGNAME A[INDICE:0] CLIC
 ESPERAR 1
@@ -177,22 +251,28 @@ irpopup 4
 atributo id txtNotas contenido guardaren $texto
 
 @@-------################## CASO 3 
+ESPERAR 1
 
+@@CERRARPOPUP 4
+@@ELIMINARULTIMOPOPUP
+@@CERRARPOPUP 3
+@@ELIMINARULTIMOPOPUP
+@@CERRARPOPUP 2
+@@ELIMINARULTIMOPOPUP
+ESPERAR 1
+
+irpopup 1
 navegar http://intranetsisact/sisact/Index.aspx
 recuadro 0
 esperar 1
 accion id imgIngresar clic 
-esperar 1
+ESPERAR 1 
 accion id imgIngresar clic 
-
-
+ESPERAR 1
 accion id HM_Item1_3 clic
 accion id HM_Item1_3_1 clic 
 ESPERAR 1
-accion id HM_Item1_3_1 clic 
-ESPERAR 1
 recuadro i1
-
 ESPERAR 1
 ACCION ID ddlTipoDocumento ELEGIRXTEXTO DNI CLIC
 encontrar name txtNroDocumento
@@ -213,26 +293,19 @@ VALORCELDA id dgLista 1 5 GUARDAREN $VarEstado
 VALORCELDA id dgLista 1 10 GUARDAREN $VarOficina
 VALORCELDA id dgLista 1 13 GUARDAREN $VarFechaRegistro
 
+VARIABLE $RENOVACION "RENOVACIÓN"
+VARIABLE $MDY "MDY" 
 
-si comparar identico $VarOficina $OFICINA entonces @Buscar1 sino @SaltarOtro
-@Buscar1 
-ACCIONENTABLA ID dgLista "%RENOVACIÓN,APROBADO,TLVTAS MDY MASIVO%" 0 TAGNAME A[INDICE:0] CLIC
+
+SI CONTENIDOENLINEA {$RENOVACION,MDY} ID dgLista entonces @continuarclick sino @salirsinfilas
+@continuarclick
+ACCIONENTABLA ID dgLista "%RENO%,%MDY%" 0 TAGNAME A[INDICE:0] CLIC
 ESPERAR 1
-ACCIONENTABLA ID dgLista "%RENOVACIÓN,APROBADO,TLVTAS MDY MASIVO%" 0 TAGNAME A[INDICE:0] CLIC
-continuaren @Correcto1
-@SaltarOtro
-si comparar identico $VarOficina $OFICINA1 entonces @buscar2 sino @SatltarTodoError 
-@buscar2
-ACCIONENTABLA ID dgLista "%RENOVACIÓN,APROBADO,TELEVENTAS MDY%" 0 TAGNAME A[INDICE:0] CLIC
-esperar 1
-ACCIONENTABLA ID dgLista "%RENOVACIÓN,APROBADO,TELEVENTAS MDY%" 0 TAGNAME A[INDICE:0] CLIC
-continuaren @Correcto2
-@SatltarTodoError
-variable $ESTADO "REINTENTAR"
-variable $SUBESTADO "No se encontro Filas Candidatas"
-CONTINUAREN @FinErrorTablaLista
-@Correcto1
-@Correcto2
+ACCIONENTABLA ID dgLista "%RENO%,%MDY%" 0 TAGNAME A[INDICE:0] CLIC
+ESPERAR 1
+@salirsinfilas
+variable $ESTADO "NO TIENE FILAS"
+variable $SUBESTADO "NO TIENE FILAS"
 
 listarpopups
 irpopup 5
@@ -241,44 +314,47 @@ ATRIBUTO id txtNroSEC value GUARDAREN $VarNroSec
 variable $textoSec "Sec"
 irpopup 4 
 
-si contenidoenlinea {$textoSec,$VarNroSec} id txtNotas entonces @verificarsec sino @Continuarcorrectosec 
-@Continuarcorrectosec
+contenidoenlinea {$textoSec,$VarNroSec} id txtNotas
+si contenidoenlinea {$textoSec,$VarNroSec} id txtNotas entonces @correctosec sino @reportesec 
+@reportesec
 VARIABLE $ESTADO "CAIDA"
 VARIABLE $SUBESTADO "SIN SEC"
 CONTINUAREN @FINALCASO3
-@verificarsec
+@correctosec
 
 VARIABLE $TEXTOCALL "CALL"
 VARIABLE $CENTER "CENTER"
-VARIABLE $TEXTOMDY "MDY"
-SI COTENIDOENLINEA {$TEXTOCALL,$CENTER,MDY} id txtNotas entonces @pertenecemdy sino @otrocall
+VARIABLE $TEXTO200 "*200"
+SI contenidoenlinea {$TEXTOCALL,$CENTER,$TEXTO200} id txtNotas entonces @pertenecemdy sino @otrocall
 @otrocall
 VARIABLE $ESTADO "CAIDA"
 VARIABLE $SUBESTADO "OTRO CALL"
 CONTINUAREN @FINALCASO4
 @pertenecemdy
 
-
 FUNCION EXTRAE $FECHAGESTION 0 10 GUARDAREN $fechaSoli
 
 VARIABLE 	$FECHADESOLICITUD $fechaSoli	
-FUNCION EXTRAE $VarFechaAct 0 10 GUARDAREN $fechaActi
-VARIABLE	$FECHADEACTIVACION	$fechaActi
+VARIABLE	$FECHADEACTIVACION	$FECHAVENTA
 VARIABLE	$NUEVALINEA $NUMERODEVENTA
-VARIABLE	$SEC "*200"
-VARIABLE	$TIPODEPRODUCTO $VarModeloEquipo 
-VARIABLE	$COSTODEEQUIPO 
-VARIABLE	$PLANADQUIRIDO
-VARIABLE	$COSTODEPLANADQUIRIDO
-VARIABLE	$COSTOSINIGV
-VARIABLE	$PONDERADO
-VARIABLE	$MODALIDAD
-VARIABLE	$DEPDEVENTA
-VARIABLE	$ESTADOVENTA
-VARIABLE	$CAC
-VARIABLE	$CAMPAÑA
-
-
+VARIABLE	$SEC $VarNroSec
+VARIABLE	$TIPODEPRODUCTO $DESCRIPCION 
+FUNCION ULTIMOENTEROSMART $DESCPLAN GUARDAREN $PLANNUMERO
+VARIABLE	$COSTODEEQUIPO $PRECIOVENTA
+VARIABLE	$PLANADQUIRIDO $DESCPLAN
+VARIABLE	$COSTODEPLANADQUIRIDO $PLANNUMERO
+VARIABLE $IGV 1.8
+FUNCION EVALUA $PLANNUMERO/$IGV GUARDAREN $SINIGV
+VARIABLE	$COSTOSINIGV $SINIGV
+VARIABLE	$PONDERADO "---"
+FUNCION EXTRAE $VarOficina 0 3 GUARDAREN $VARMODALIDAD
+VARIABLE	$MODALIDAD1 $VARMODALIDAD
+VARIABLE	$DEPDEVENTA "LIMA"
+VARIABLE	$ESTADOVENTA "VENTA"
+VARIABLE	$CAC $VarOficina
+VARIABLE	$CAMPAA $DESCAMPANA
+VARIABLE 	$ESTADO "ACTIVO"
+VARIABLE 	$SUBESTADO "CONCRETADO" 
 
 @@########################---COMPARAR SEC SON IGUALES
 @@########################---COMPARAR 
@@ -287,11 +363,20 @@ VARIABLE	$CAMPAÑA
 @@eTIQUETAS FINALES 
 
 
+VARIABLE
+
 @salirsecdiferente
 @FINALCASO2
 @FINALCASO3
 @FINALCASO5
 @FINALCASO6
 @finalCaso7
+@finalCaso7ACTUAL
+@FINALCASOSINE
+@FINALCASO4
+
+@FINALCASOCHIPSUELTO
+
+@NOEXISTERENOVACION
 
 TERMINAR
