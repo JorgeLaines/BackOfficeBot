@@ -48,7 +48,7 @@ ELIMINARULTIMOPOPUP
 @@---guardar variable dni
 esperar 2
 recuadro i1
-esperar1
+esperar 1
 ATRIBUTO id lblDNI_RUC contenido GUARDAREN $VarDni
 esperar 1
 ATRIBUTO id lblDNI_RUC contenido GUARDAREN $VarDni
@@ -119,10 +119,14 @@ ESPERAR 1
 @ContinuarTotal7
 @seguirmenor
 
+recuadro i2
+ATRIBUTO id lblModalidad contenido GUARDAREN $Varcorporativo
+
+
+recuadro -1
+esperar 1
 
 recuadro i3
-
-
 @@eSPERAMOS PENDIENTE POR REVISAR   #############################-----PENDIENTE IGV
 
 @@--sacamos el plan sin igv
@@ -172,14 +176,25 @@ continuaren @FinalCaso5
 @@-----############################---Caso 2---linea desactiva
 esperar 1
 variable $VarEstadoDesactivo "Desactivo"
+variable $Varcorporativo
+variable $corporativo "Corporativo - JANUS"
 si comparar identico $VarEstado $VarEstadoDesactivo ENTONCES @reporteCaso2 SINO @ContinuarCaso2
 @ContinuarCaso2
 CONTINUAREN @siguiente2
 @reporteCaso2
 VARIABLE $ESTADO "CAIDA"
 VARIABLE $SUBESTADO "LINEA DESACTIVA"
+si comparar identico $Varcorporativo $corporativo ENTONCES @Reportecasocor sino @noescorporativo
+@Reportecasocor
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "CORPORATIVO"
 CONTINUAREN @FinalCaso2
+@noescorporativo
 @siguiente2
+
+
+
+
 ESPERAR 1
 
 

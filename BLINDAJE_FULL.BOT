@@ -51,7 +51,7 @@ navegar http://intranetsiacpost/siacpost-frontend/
 IRPOPUP 1
 esperar 1
 accion id imgIngresar clic
-ESPERAR 2
+ESPERAR 3
 accion id txtNombreTelefono escribe $MSISDN
 esperar 1
 irpopup 1
@@ -96,6 +96,7 @@ recuadro i2
 variable $Dos 2
 ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFactu
 recuadro -1
+variable $contador 3
 @generarTryCasoVentana55
 accion id tuMen0 clic
 ESPERAR 2
@@ -104,8 +105,9 @@ esperar 4
 accion id op_0_6 clic O3
 esperar 1
 variable $dos 2
-variable $contador 3
+
 variable $UnoUno 1
+variable $cerocero 0
 esperar 5
 ATRIBUTO id lblPlanActual contenido GUARDAREN $lblPlanActualCliente
 esperar 2
@@ -113,7 +115,8 @@ CANTIDADPOPUPS GUARDAREN $POPUP
 SI COMPARAR IGUAL $POPUP $dos ENTONCES @SeguirExitoTry55 SINO @restarUnoCasoVen55
 @restarUnoCasoVen55
 funcion evalua $contador-$UnoUno guardaren $contador1
-si comparar igual $$contador1 $cerocero @SalirErrorCasoVen55 sino @generarTryCasoVentana55
+VARIABLE $contador $contador1
+si comparar igual $contador1 $cerocero @SalirErrorCasoVen55 sino @generarTryCasoVentana55
 @SeguirExitoTry55
 VARIABLE $ALERTA
 @@-------------------###################---caso 12
@@ -901,6 +904,7 @@ esperar 1
 accion id ddlTopesConsumo ELEGIRXVALOR 536 clic
 esperar 1
 accion id ddlTopesConsumo ELEGIRXVALOR 536 clic
+esperar 1
 continuaren @SeSelecciono2
 @Verificar2
 SI CONTENIDOEN {$CERO,$AUTOMATICO} id txtNota entonces @ReporteMalaIntera sino @MalaInteraccion
@@ -956,11 +960,14 @@ VARIABLE $SUBESTADO $VariablePendienteNoviembre
 variable $CF1 $CF 
 @SeValido
 CONTINUAREN @FinalCasOEXITOSO
+
 @SIGUIENTEPASO1711
 VARIABLE $ESTADO "ERROR"
-VARIABLE $SUBESTADO "ERROR"
+VARIABLE $SUBESTADO $ALERTA
 variable $CF1 $CF 
 @SIGUIENTEPASOEXITO
+
+
 @@--------@@#######################-----caso 07@@-------------REALIZAMOS SALTO POR QUE AUN NO ESTA EN PRODUCTION
 @FinalCaso2
 @FinalCaso3
