@@ -83,6 +83,9 @@ encontrar id tbHistoricoVentasDet
 @@Varible Modelo de equipo 
 esperar 4
 
+VARIABLE $TEXTOFILAS "$filastabla"
+
+
 variable $CEROFILAS 0
 variable $inicialCosto 0
 FUNCION CONTARTABLAFILASTR id tbodyDataDet GUARDAREN $filastabla
@@ -142,9 +145,11 @@ CONTINUAREN @FinalCaso4Corpotativo
 
 @@condicional activo concretado #######################
 
-VARIABLE $campana "CLARO CONEXION ALTA"
-si comparar identico $VarCampana $campana entonces @ReporteConcretado sino @PendienteRevisar
-@ReporteConcretado
+@@SE MODIFICA CONEXION POR MAX (NUEVA ESPECIFICACION)
+VARIABLE $campana "CLARO MAX ALTA"
+
+@@si comparar identico $VarCampana $campana entonces @ReporteConcretado sino @PendienteRevisar
+@@@ReporteConcretado
 esperar 1
 VARIABLE $FECHADESOLICITUD $FECHAGESTION
 VARIABLE $FECHADEACTIVACION $FECHAHOY
@@ -168,10 +173,10 @@ VARIABLE $MOTIVO "ACTIVACION"
 VARIABLE $ESTADO "ACTIVO"
 VARIABLE $SUBESTADO "CONCRETADO"
 CONTINUAREN @FinalConcretado
-@PendienteRevisar
-VARIABLE $ESTADO "ACTIVO"
-VARIABLE $SUBESTADO "CONCRETADO"
-CONTINUAREN @FinalPendienteActivacion
+@@@PendienteRevisar
+@@VARIABLE $ESTADO "ACTIVO"
+@@VARIABLE $SUBESTADO "CONCRETADO"
+@@CONTINUAREN @FinalPendienteActivacion
 
 
 @@ navegar http://intranetsiacpost/siacpost-frontend/

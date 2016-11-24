@@ -411,38 +411,33 @@ continuaren @FinalCaso9
 @seguirCasoDownsell
 variable $CF1 $CF 
 recuadro -1
-@@
 @@DATOS A REVISAR = ESTADO DE LA LINEA / LIMITE DE CREDITO /MONTO EN DISPUTA
-
+variable $contador 3
 @GeneraTrypopup3
 irpopup 1
 accion id tuMen2 clic
 accion id op_2_3 clic
 ESPERAR 1
 accion id op_2_3 clic
-
 esperar 3
 CANTIDADPOPUPS GUARDAREN $POPUP
 variable $POPUP
 variable $CuatroCuatro 4
-variable $contador 3
 variable $UnoUno 1
-
-
+variable $cerocero 0
 SI COMPARAR IGUAL $POPUP $CuatroCuatro ENTONCES @continuarCorrectoPopup3 sino  @TerminarErrorPopup3
 @TerminarErrorPopup3
 funcion evalua $contador-$UnoUno guardaren $contador1
+VARIABLE $contador $contador1
+
 si comparar igual $contador1 $cerocero @ErrorPopup3 sino @GeneraTrypopup3
 @ErrorPopup3
 variable $ESTADO "ERROR"
-variable $SUBESTADO "LATENCIA DE SISTEMA"
+variable $SUBESTADO "LATENCIA NO ABRIO INTERACIONES"
 CONTINUAREN @ErrorPopup3Final
-
 @continuarCorrectoPopup3
-
 IRPOPUP 3
 @@--------@@#######################-----caso 11 - NO EJECUTA
-
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 
@@ -459,9 +454,7 @@ SI COMPARAR IGUAL $POPUP $CincoCinco ENTONCES @SeguirExitoTry SINO @restarUnoCas
 @restarUnoCaso11
 funcion evalua $contador-$UnoUno guardaren $contador1
 si comparar igual $contador1 $cerocero @SalirErrorCaso11 sino @generarTryCaso11
-
 @SeguirExitoTry
-
 VARIABLE $ALERTA
 VARIABLE $EXISTECLARIFY "El contacto no existe en Clarify."
 SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTE11 SINO @VERIFICARCASO11
@@ -484,11 +477,9 @@ ACCION ID btnCerrar CLIC
 ELIMINARULTIMOPOPUP
 @@$$$$$SE #########################################
 irpopup 3
-
 @@--------@@#######################-----caso 6-------------------esperando correccion
 @@
 VALORCELDA id dgInteracion 1 1 GUARDAREN $FECHA
-
 FUNCION EXTRAE $FECHA 0 10 GUARDAREN $FECHA2
 FUNCION EXTRAE $FECHADEBUSQ 0 10 GUARDAREN $VarFecBusqueda
 variable $FECHA2
@@ -940,7 +931,7 @@ esperar 1
 accion id btnGrabar clic M4
 ESPERAR 2
 VARIABLE $ALERTA
-VARIABLE $EXISTEALERTAEXITOSA "¿Estás seguro de programar la Migración de Plan?"
+VARIABLE $EXISTEALERTAEXITOSA "Proceso ejecutado correctamente"
 encontrar id 0
 SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASOEXITO SINO @VERIFICARCASO171
 @VERIFICARCASO171
@@ -960,14 +951,11 @@ VARIABLE $SUBESTADO $VariablePendienteNoviembre
 variable $CF1 $CF 
 @SeValido
 CONTINUAREN @FinalCasOEXITOSO
-
 @SIGUIENTEPASO1711
 VARIABLE $ESTADO "ERROR"
 VARIABLE $SUBESTADO $ALERTA
 variable $CF1 $CF 
 @SIGUIENTEPASOEXITO
-
-
 @@--------@@#######################-----caso 07@@-------------REALIZAMOS SALTO POR QUE AUN NO ESTA EN PRODUCTION
 @FinalCaso2
 @FinalCaso3
