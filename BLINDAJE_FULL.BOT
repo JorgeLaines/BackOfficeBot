@@ -237,6 +237,8 @@ variable $CF1 $CF
 CONTINUAREN @FinalCaso10
 @continuar10
 @SIGUIENTEPASO10
+listarpopups
+
 irpopup 2
 esperar 1 
 si contenidoen {$control} id lblPlanActual entonces @reporteCasoControl sino @ContinuarControl
@@ -629,7 +631,7 @@ si comparar igual $contador1 $cerocero @SalirErrorCasoVen5 sino @generarTryCasoV
 irpopup 5
 @@--------------------------------------------------------------
 @@--------@@#######################-----caso 04
-esncontrar id aaa
+encontrar id aaa
 irpopup 5
 esperar 1
 ATRIBUTO ID SIACPO_DAC1_cboDAC ELEGIDOVALOR GUARDAREN $VarCombo
@@ -926,9 +928,9 @@ CONTINUAREN @FINALAPADECE
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 esperar 1
-accion id btnGrabar clic M4
+accion id btnGrabar clic M10
 esperar 1
-accion id btnGrabar clic M4
+accion id btnGrabar clic M10
 ESPERAR 2
 VARIABLE $ALERTA
 VARIABLE $EXISTEALERTAEXITOSA "Proceso ejecutado correctamente"

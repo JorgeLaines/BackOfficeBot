@@ -1,5 +1,4 @@
-﻿MODO REINTENTAR APAGADO
-iniciar
+﻿iniciar
 navegar http://intranetsisact/sisact/Index.aspx
 recuadro 0
 esperar 1
@@ -7,7 +6,6 @@ accion id imgIngresar clic
 esperar 1
 accion id imgIngresar clic
 @@consula por sec
-
 accion id HM_Item1_3 clic
 accion id HM_Item1_3_1 clic 
 ESPERAR 1
@@ -15,15 +13,38 @@ accion id HM_Item1_3_1 clic
 ESPERAR 1
 recuadro i1
 ESPERAR 1
-
 ACCION ID ddlTipoDocumento ELEGIRXTEXTO DNI CLIC
 encontrar name txtNroDocumento
 accion name txtNroDocumento escribe $DNIRUC
-
 ESPERAR 1
 accion name btnConsultar clic
 ESPERAR 1
 accion name btnConsultar clic
+esperar 1
+variable $textomensaje "No Existen Registros"
+ATRIBUTO id lblMensaje contenido GUARDAREN $VarlblMensaje
+si comparar identico $VarlblMensaje $textomensaje entonces @reportesinregistro sino @continuarproceso
+@reportesinregistro
+VARIABLE 	$LNEA "-"
+VARIABLE	$NOMBREDELCLIENTE  "-"
+VARIABLE	$SEC  "-"
+VARIABLE	$OPERADOR  "-"
+VARIABLE	$TIPODEPORTABILIDAD "-"
+VARIABLE	$TIPODEVENTA "-"
+VARIABLE	$FECHAACTIVACIN  "-"
+VARIABLE	$ESTADOSSOLICITUDES   "-"
+VARIABLE	$MOVIL 	 "-"
+VARIABLE	$PUNTODEVENTA  "-"
+VARIABLE	$PLAN 	"-"
+VARIABLE	$CARGOFIJOTOTAL  "-"
+VARIABLE	$PLAZOACUERDO	 "-"
+VARIABLE	$SOLICITUDES  "-"
+VARIABLE	$EFECTIVOCUOTAS "--"
+VARIABLE	$SUPERVISOR  "-"
+VARIABLE	$ESTADO "CAIDA"
+VARIABLE	$SUBESTADO "NO TIENE REGISTROS"
+CONTINUAREN @finalsinregistro
+@continuarproceso
 
 variable $MIGRACION "MIGRACION"
 VARIABLE $ESTADO "APROBADO"
@@ -42,8 +63,8 @@ VALORCELDA id dgLista 1 8 GUARDAREN $VarNombreCompleto
 VARIABLE $DNIRUC 
 SI COMPARAR IDENTICO $DNIRUC $VarNumeroDocumento entonces @continuardnicorrecto sino @reportedni
 @reportedni
-variable $ESTADO "CAIDA"
-variable $SUBESTADO "MALA INTERACION CRM"
+variable $TIPODEVENTA "CAIDA"
+variable $MOVIL "MALA INTERACION CRM"
 CONTINUAREN @FINALMALAINTERACION
 @continuardnicorrecto
 
@@ -72,19 +93,15 @@ ACCIONENTABLA ID dgLista "%PORTABILIDAD%," 0 TAGNAME A[INDICE:1] CLIC
 ESPERAR 1
 ACCIONENTABLA ID dgLista "%PORTABILIDAD%" 0 TAGNAME A[INDICE:1] CLIC
 esperar 3
-
 @@abrimos lupa indice 0 
 ACCIONENTABLA ID dgLista "%PORTABILIDAD%" 0 TAGNAME A[INDICE:0] CLIC
 esperar 1
 ACCIONENTABLA ID dgLista "%PORTABILIDAD%" 0 TAGNAME A[INDICE:0] CLIC
 ESPERAR 1
-
 irpopup 1
-
 ATRIBUTO id lblConsultor contenido GUARDAREN $VarlblConsultor
 FUNCION EXTRAE $VarlblConsultor 0 2 GUARDAREN $IniciarNroVendedor
 variable $E3 "E3"
-
 si comparar identico $IniciarNroVendedor $E3 entonces @SiNumeroIgual @NoNumeroIgual
 @NoNumeroIgual
 variable $estado "CAIDA"
@@ -102,13 +119,11 @@ ATRIBUTO id txtPuntoVenta value GUARDAREN $VarPuntoVenta
 @@ variblae plazo del dgPlanes
 VALORCELDA id dgPlanes 1 1 GUARDAREN $PLAZO
 VALORCELDA id dgPlanes 1 4 GUARDAREN $EQUIPO
-
 ATRIBUTO id txtCedente value GUARDAREN $VarCedente
 VARIABLE $TEXTOMOVISTAR "Telefónica Móviles S.A. (MOVIL Y TFI)"
 VARIABLE $TEXTOBITEL "VIETTEL PERU S.A.C."
 VARIABLE $TEXTOVIRGIN "Virgin Mobile Peru"
 VARIABLE $TEXTOENTEL "Nextel del Perú S.A."
-
 
 si COMPARAR IDENTICO $VarCedente $TEXTOMOVISTAR ENTONCES @ESMOVISTAR SINO @VERIFICAROTRO
 @ESMOVISTAR
@@ -134,21 +149,21 @@ VARIABLE $BITEL "BITEL"
 VARIABLE $VarCedente $BITEL
 continuaren @seeligiobitel
 @VERIFICAROTRO3
-
 @seeligiomovistar
 @seeligioentel
 @seeligiovirgin
 @seeligiobitel
-
 esperar 1
 accion id btnMostrarDetalle clic
 esperar 1
-accion id btnMostrarDetalle clic
 ESPERAR 1
 irpopup 3
 ESPERAR 1
 irpopup 3
 esperar 10
+CANTIDADPOPUPS GUARDAREN $POPUP
+
+
 @@--22	Verificamos que el número a portar sea igual al del archivo Excel.
 VALORCELDA id dgrMovil 1 9 GUARDAREN $VarNroPortar
 
@@ -166,11 +181,9 @@ esperar 1
 @@ @ConNumPortar
 
 irpopup 0
-
 RECUADRO -1
 RECUADRO -1
 esperar 1
-
 navegar http://intranetsiacpost/siacpost-frontend/
 encontrar id 0
 listarpopups
@@ -195,6 +208,7 @@ accion id imgBuscar clic M2
 esperar 1
 accion id imgBuscar clic M2
 
+
 @@variable
 ESPERAR 2
 VARIABLE $ALERTA
@@ -205,29 +219,6 @@ SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASO17 SINO @VERIFICA
 encontrar id 0
 SI COMPARAR IDENTICO $ALERTA $EXISTEPOSTPAGO ENTONCES @CASOEXISTEPOSTPAGO SINO @SIGUIENTEPASO171
 @CASOEXISTEPOSTPAGO
-VARIABLE $ESTADO "CAIDA"
-VARIABLE $SUBESTADO "NO ES POST PAGO"
-VARIABLE $BACKOFFICE "-BOOT-"
-CONTINUAREN @FinalCaso17
-@SIGUIENTEPASO171
-@SIGUIENTEPASO17
-
-irpopup 4
-
-VARIABLE $VarPlan "no se obtuvo"
-esperar 1
-recuadro i3
-ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
-ATRIBUTO id lblFechaActivacion contenido GUARDAREN $VarFechaactivacionlinea
-ATRIBUTO id lblMotivo contenido GUARDAREN $VarMotivo
-variable $ACTPORT "Activacion Port IN"
-
-SI COMPARAR IDENTICO $ACTPORT $VarMotivo entonces @reporteventa sino @reportesolicitud
-@reporteventa
-variable $ESTADOSOLICITUDES "VENTA"
-continuaren @esventa
-@reportesolicitud
-
 VARIABLE 	$LNEA $VarNroPortar
 VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
 VARIABLE	$SEC $VarNroSec
@@ -244,18 +235,57 @@ VARIABLE	$CARGOFIJOTOTAL "-"
 VARIABLE	$PLAZOACUERDO	"-"
 VARIABLE	$SOLICITUDES "-"
 VARIABLE	$EFECTIVOCUOTAS "-"
-VARIABLE	$SUPERVISOR
+VARIABLE	$SUPERVISOR "---"
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "NO ES POST PAGO"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @FinalCaso17
+@SIGUIENTEPASO171
+@SIGUIENTEPASO17
+irpopup 4
+VARIABLE $VarPlan "no se obtuvo"
+esperar 1
+recuadro i3
+ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
+ATRIBUTO id lblFechaActivacion contenido GUARDAREN $VarFechaactivacionlinea
+ATRIBUTO id lblMotivo contenido GUARDAREN $VarMotivo
+variable $ACTPORT "Activacion Port IN"
+
+SI COMPARAR IDENTICO $ACTPORT $VarMotivo entonces @reporteventa sino @reportesolicitud
+@reporteventa
+continuaren @esventa
+@reportesolicitud
+VARIABLE 	$LNEA $VarNroPortar
+VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
+VARIABLE	$SEC $VarNroSec
+VARIABLE	$OPERADOR $VarCedente
+VARIABLE	$TIPODEPORTABILIDAD "POSTPAGO"
+VARIABLE	$TIPODEVENTA "PORTABILIDAD"
+VARIABLE	$FECHAACTIVACIN "-"
+@@---estado solicitud para este caso
+variable 	$ESTADOSSOLICITUDES "SOLICITUD"
+VARIABLE	$MOVIL 	""
+VARIABLE	$PUNTODEVENTA $VarPuntoVenta
+VARIABLE	$PLAN 	"-"
+VARIABLE	$CARGOFIJOTOTAL "-"
+VARIABLE	$PLAZOACUERDO	"-"
+VARIABLE	$SOLICITUDES "-"
+VARIABLE	$EFECTIVOCUOTAS "-"
+
+VARIABLE	$SUPERVISOR "---"
+VARIABLE	$ESTADO "CONCRETADO"
+VARIABLE	$SUBESTADO "PORTABILIDAD"
+
 continuaren @IMPRIMIRSOLICITUD
 @esventa
 VARIABLE 	$LNEA $VarNroPortar
-
 VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
 VARIABLE	$SEC $VarNroSec
 VARIABLE	$OPERADOR $VarCedente
 VARIABLE	$TIPODEPORTABILIDAD "POSTPAGO"
 VARIABLE	$TIPODEVENTA "PORTABILIDAD"
 VARIABLE	$FECHAACTIVACIN $VarFechaactivacionlinea
-VARIABLE	$ESTADOSSOLICITUDES 
+VARIABLE	$ESTADOSSOLICITUDES "VENTA"
 VARIABLE	$MOVIL 	$EQUIPO
 VARIABLE	$PUNTODEVENTA $VarPuntoVenta
 VARIABLE	$PLAN 	$VarPlan
@@ -263,12 +293,11 @@ FUNCION ULTIMOENTEROSMART $VarPlan GUARDAREN $PLANNUMERO
 VARIABLE	$CARGOFIJOTOTAL $PLANNUMERO
 VARIABLE	$PLAZOACUERDO	$PLAZO
 VARIABLE	$SOLICITUDES "TELEVENTAS"
-VARIABLE	$EFECTIVOCUOTAS "--"
-VARIABLE	$SUPERVISOR "--"
-
-
+VARIABLE	$EFECTIVOCUOTAS "-"
+VARIABLE	$SUPERVISOR "-"
+VARIABLE	$ESTADO "CONCRETADO"
+VARIABLE	$SUBESTADO "PORTABILIDAD"
 @IMPRIMIRSOLICITUD
-
 
 @@----ESTADO: ACTIVO
 @@----SUBESTADO: CONCRETADO
@@ -284,10 +313,8 @@ VARIABLE	$SUPERVISOR "--"
 @FINALMALAINTERACION
 @FinalNroE3
 @FinalCaso17
-
+@finalsinregistro
 @@--&&&&&&&&&&&&&&&&&&&&&&&--final caidas errores
 @FinErrorTablaLista
 @FinalPortal
-
-
 TERMINAR
