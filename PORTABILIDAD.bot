@@ -22,6 +22,22 @@ ESPERAR 1
 accion name btnConsultar clic
 esperar 1
 variable $textomensaje "No Existen Registros"
+
+variable $Varmansajelleno "null"
+variable $Varmansajetexto "Consultar"
+
+ATRIBUTO id btnConsultar value GUARDAREN $Varmansajelleno
+@@actualizando variable
+variable $Varmansajelleno
+
+si comparar identico $Varmansajetexto $Varmansajelleno entonces @continuarproce sino @salirErrorCargar
+@salirErrorCargar
+VARIABLE	$ESTADO "ERROR"
+VARIABLE	$SUBESTADO "LATENCIA DE SISTEMA"
+CONTINUAREN @FINALCASOLATENCIA
+@continuarproce
+
+
 ATRIBUTO id lblMensaje contenido GUARDAREN $VarlblMensaje
 si comparar identico $VarlblMensaje $textomensaje entonces @reportesinregistro sino @continuarproceso
 @reportesinregistro
@@ -53,6 +69,8 @@ variable $OFICINA1 "TELEVENTAS MDY"
 
 @@  VALOR EN CELDA OBTENEMOS LAS VARIABLE PARA SU VALIDACION
 
+v
+
 VALORCELDA id dgLista 1 4 GUARDAREN $VarMigracion
 VALORCELDA id dgLista 1 5 GUARDAREN $VarEstado
 VALORCELDA id dgLista 1 10 GUARDAREN $VarOficina
@@ -63,8 +81,26 @@ VALORCELDA id dgLista 1 8 GUARDAREN $VarNombreCompleto
 VARIABLE $DNIRUC 
 SI COMPARAR IDENTICO $DNIRUC $VarNumeroDocumento entonces @continuardnicorrecto sino @reportedni
 @reportedni
-variable $TIPODEVENTA "CAIDA"
-variable $MOVIL "MALA INTERACION CRM"
+
+VARIABLE 	$LNEA "-"
+VARIABLE	$NOMBREDELCLIENTE "-"
+VARIABLE	$SEC "-"
+VARIABLE	$OPERADOR $VarCedente
+VARIABLE	$TIPODEPORTABILIDAD "-"
+VARIABLE	$TIPODEVENTA "-"
+VARIABLE	$FECHAACTIVACIN "-"
+@@---estado solicitud para este caso
+variable $ESTADOSSOLICITUDES "-"
+VARIABLE	$MOVIL 	""
+VARIABLE	$PUNTODEVENTA $VarPuntoVenta
+VARIABLE	$PLAN 	"-"
+VARIABLE	$CARGOFIJOTOTAL "-"
+VARIABLE	$PLAZOACUERDO	"-"
+VARIABLE	$SOLICITUDES "-"
+VARIABLE	$EFECTIVOCUOTAS "-"
+VARIABLE	$SUPERVISOR "---"
+variable $ESTADO "CAIDA"
+variable $SUBESTADO "MALA INTERACION CRM"
 CONTINUAREN @FINALMALAINTERACION
 @continuardnicorrecto
 
@@ -88,6 +124,8 @@ variable $ESTADO "NO TIENE PORTA"
 VARIABLE $SUBESTADO "NO TIENE PORTA"
 CONTINUAREN @FINALNOTIENEPORTA
 @Selecionarentabla
+
+
 @@ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%" 0 TAGNAME A[INDICE:1] CLIC
 ACCIONENTABLA ID dgLista "%PORTABILIDAD%," 0 TAGNAME A[INDICE:1] CLIC
 ESPERAR 1
@@ -223,11 +261,11 @@ VARIABLE 	$LNEA $VarNroPortar
 VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
 VARIABLE	$SEC $VarNroSec
 VARIABLE	$OPERADOR $VarCedente
-VARIABLE	$TIPODEPORTABILIDAD "POSTPAGO"
+VARIABLE	$TIPODEPORTABILIDAD "NO ES POSTPAGO"
 VARIABLE	$TIPODEVENTA "PORTABILIDAD"
 VARIABLE	$FECHAACTIVACIN "-"
 @@---estado solicitud para este caso
-variable $ESTADOSOLICITUDES "SOLICITUD"
+variable $ESTADOSSOLICITUDES "SOLICITUD"
 VARIABLE	$MOVIL 	""
 VARIABLE	$PUNTODEVENTA $VarPuntoVenta
 VARIABLE	$PLAN 	"-"
@@ -247,7 +285,37 @@ VARIABLE $VarPlan "no se obtuvo"
 esperar 1
 recuadro i3
 ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
+
 ATRIBUTO id lblFechaActivacion contenido GUARDAREN $VarFechaactivacionlinea
+FUNCION EXTRAE $VarFechaactivacionlinea 3 2 GUARDAREN $MesActualActivacion
+variable $MesActualActivacion
+VARIABLE $FECHAHOY $$HOY
+esperar 1
+FUNCION EXTRAE $FECHAHOY 3 2 GUARDAREN $MesActual
+variable $MesActual
+si comparar igual $MesActual $MesActualActivacion entonces @Continuarproce sino @CasoSolicitudmes
+@CasoSolicitudmes
+ VARIABLE 	$LNEA $VarNroPortar
+VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
+VARIABLE	$SEC $VarNroSec
+VARIABLE	$OPERADOR $VarCedente
+VARIABLE	$TIPODEPORTABILIDAD "POSTPAGO"
+VARIABLE	$TIPODEVENTA "PORTABILIDAD"
+VARIABLE	$FECHAACTIVACIN "-"
+@@---estado solicitud para este caso
+variable 	$ESTADOSSOLICITUDES "SOLICITUD"
+VARIABLE	$MOVIL 	""
+VARIABLE	$PUNTODEVENTA $VarPuntoVenta
+VARIABLE	$PLAN 	"-"
+VARIABLE	$CARGOFIJOTOTAL "-"
+VARIABLE	$PLAZOACUERDO	"-"
+VARIABLE	$SOLICITUDES "-"
+VARIABLE	$EFECTIVOCUOTAS "-"
+VARIABLE	$SUPERVISOR "---"
+VARIABLE	$ESTADO "CONCRETADO"
+VARIABLE	$SUBESTADO "PORTABILIDAD"
+@Continuarproce
+
 ATRIBUTO id lblMotivo contenido GUARDAREN $VarMotivo
 variable $ACTPORT "Activacion Port IN"
 
@@ -317,4 +385,5 @@ VARIABLE	$SUBESTADO "PORTABILIDAD"
 @@--&&&&&&&&&&&&&&&&&&&&&&&--final caidas errores
 @FinErrorTablaLista
 @FinalPortal
+@FINALCASOLATENCIA
 TERMINAR
