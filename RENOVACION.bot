@@ -314,6 +314,30 @@ ATRIBUTO id txtNroSEC value GUARDAREN $VarNroSec
 variable $textoSec "Sec"
 irpopup 4 
 
+VALORCELDA id dgInteracion 1 1 GUARDAREN $FECHA
+FUNCION EXTRAE $FECHA 0 10 GUARDAREN $FECHA2
+FUNCION EXTRAE $FECHADEBUSQ 0 10 GUARDAREN $VarFecBusqueda
+variable $FECHA2
+COMPARAR masantigua $FECHA2 $VarFecBusqueda
+SI COMPARAR masantigua $FECHA2 $VarFecBusqueda ENTONCES @Verifica61 SINO @seguir6total1
+@Verifica61
+FUNCION EXTRAE $FECHA 3 2 GUARDAREN $MesActivacion
+FUNCION EXTRAE $FECHADEBUSQ 3 2 GUARDAREN $Mesbusqueda
+
+si comparar igual $MesActivacion $Mesbusqueda entonces  @fin61 SINO @cont61
+@cont61
+si comparar menor $MesActivacion $Mesbusqueda entonces  @ReporteCaso61 SINO @SIGUIENTEPASO61
+@ReporteCaso6
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "SIN INTERACCION SPP"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @finalCaso61
+@SIGUIENTEPASO61
+@fin61
+@seguir6total1
+
+
+
 contenidoenlinea {$textoSec,$VarNroSec} id txtNotas
 si contenidoenlinea {$textoSec,$VarNroSec} id txtNotas entonces @correctosec sino @reportesec 
 @reportesec

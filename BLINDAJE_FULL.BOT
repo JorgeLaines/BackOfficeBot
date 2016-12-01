@@ -455,6 +455,7 @@ CANTIDADPOPUPS GUARDAREN $POPUP
 SI COMPARAR IGUAL $POPUP $CincoCinco ENTONCES @SeguirExitoTry SINO @restarUnoCaso11
 @restarUnoCaso11
 funcion evalua $contador-$UnoUno guardaren $contador1
+VARIABLE $contador $contador1
 si comparar igual $contador1 $cerocero @SalirErrorCaso11 sino @generarTryCaso11
 @SeguirExitoTry
 VARIABLE $ALERTA
@@ -592,7 +593,18 @@ variable $PLANTEXTO "plan"
 VARIABLE $NUEVO "Nuevo"
 VARIABLE $actual "actual"
 
-contenidoenlinea {$5TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas
+contenidoenlinea {$5TONIVEL,$PLANTEXTO,$MODALIDAD} id txtNotas
+esperar 1
+SI contenidoenlinea {$5TONIVEL,$PLANTEXTO,$MODALIDAD} id txtNotas ENTONCES @verificar05e11 SINO @reporteCaso511
+@reporteCaso511
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "REVISAR POR CRM"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @FinalCaso511
+@verificar05e11
+
+
+contenidoenlinea {$4TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas
 esperar 1
 SI contenidoenlinea {$5TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas ENTONCES @verificar05e SINO @reporteCaso5
 @reporteCaso5
@@ -601,6 +613,8 @@ VARIABLE $SUBESTADO "MALA INTERACCION SPP"
 VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @FinalCaso5
 @verificar05e
+
+
 
 @@-----------------------------------------------------------
 
@@ -703,6 +717,22 @@ irpopup 6
 esperar 1
 accion id rdbSinTopeConsumo clic
 accion id rdbSinTopeConsumo clic
+
+variable $numero "PORT-IN"
+
+si contenidoenlinea {$numero,$VarClicoFacturacion,$detexto} id txtNota entonces @verificaCasospp1 sino @reporteCasospp1
+@verificaCasospp1
+SI contenidoen {$VarTelefono,$VarCliente,$VarDni} id txtNota ENTONCES @continuarCaso041 SINO @reporteCaso41
+@reporteCaso41
+@ReporteSalto1
+@reporteCaso521
+@reporteCasospp1
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "MALA INTERACCION SPP"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @FinalCaso41
+@continuarCaso041
+
 ESPERAR 1
 @@ EMPEZAMOS CON EL PRIMER COMBO -----------------------------------------------------------------------------------------------------------
 si comparar igual $lblReintegroApadece $CERO entonces @SelecionarChip sino @SelecionarEquipo
