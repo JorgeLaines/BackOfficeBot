@@ -1,4 +1,5 @@
-﻿iniciar
+﻿MODO REINTENTAR ENCENDIDO
+iniciar
 navegar http://intranetsisact/sisact/Index.aspx
 recuadro 0
 esperar 1
@@ -30,34 +31,12 @@ ATRIBUTO id btnConsultar value GUARDAREN $Varmansajelleno
 @@actualizando variable
 variable $Varmansajelleno
 
-si comparar identico $Varmansajetexto $Varmansajelleno entonces @continuarproce sino @salirErrorCargar
+si comparar identico $Varmansajetexto $Varmansajelleno entonces @continuarproce1 sino @salirErrorCargar
 @salirErrorCargar
-
-VARIABLE 	$LNEA $VarNroPortar
-VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
-VARIABLE	$SEC $VarNroSec
-VARIABLE	$OPERADOR $VarCedente
-VARIABLE	$TIPODEPORTABILIDAD "NO ES POSTPAGO"
-VARIABLE	$TIPODEVENTA "PORTABILIDAD"
-VARIABLE	$FECHAACTIVACIN "-"
-@@---estado solicitud para este caso
-variable $ESTADOSSOLICITUDES "SOLICITUD"
-VARIABLE	$MOVIL 	""
-VARIABLE	$PUNTODEVENTA $VarPuntoVenta
-VARIABLE	$PLAN 	"-"
-VARIABLE	$CARGOFIJOTOTAL "-"
-VARIABLE	$PLAZOACUERDO	"-"
-VARIABLE	$SOLICITUDES "-"
-VARIABLE	$EFECTIVOCUOTAS "-"
-VARIABLE	$SUPERVISOR "---"
-VARIABLE $ESTADO "PENDIENTE"
-VARIABLE $SUBESTADO "NO ES POST PAGO"
-VARIABLE $BACKOFFICE "-BOOT-"
-
 VARIABLE	$ESTADO "ERROR"
 VARIABLE	$SUBESTADO "LATENCIA DE SISTEMA"
 CONTINUAREN @FINALCASOLATENCIA
-@continuarproce
+@continuarproce1
 
 
 ATRIBUTO id lblMensaje contenido GUARDAREN $VarlblMensaje
@@ -140,6 +119,7 @@ CONTINUAREN @FINALMALAINTERACION
 @@abrimos impresora indice 1
 variable $TEXTOPORTABILIDAD "PORTABILIDAD"
 
+
 SI CONTENIDOEN {$TEXTOPORTABILIDAD} id dgLista entonces @Selecionarentabla sino @noexisteportabilidad
 @noexisteportabilidad
 variable $ESTADO "NO TIENE PORTA"
@@ -147,7 +127,7 @@ VARIABLE $SUBESTADO "NO TIENE PORTA"
 CONTINUAREN @FINALNOTIENEPORTA
 @Selecionarentabla
 
-
+@@sale error de http  
 @@ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%" 0 TAGNAME A[INDICE:1] CLIC
 ACCIONENTABLA ID dgLista "%PORTABILIDAD%," 0 TAGNAME A[INDICE:1] CLIC
 ESPERAR 1
@@ -309,6 +289,7 @@ recuadro i3
 ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
 
 ATRIBUTO id lblFechaActivacion contenido GUARDAREN $VarFechaactivacionlinea
+
 FUNCION EXTRAE $VarFechaactivacionlinea 3 2 GUARDAREN $MesActualActivacion
 variable $MesActualActivacion
 VARIABLE $FECHAHOY $$HOY
@@ -408,4 +389,5 @@ VARIABLE	$SUBESTADO "PORTABILIDAD"
 @FinErrorTablaLista
 @FinalPortal
 @FINALCASOLATENCIA
-TERMINAR
+
+terminar 

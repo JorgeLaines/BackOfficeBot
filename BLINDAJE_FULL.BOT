@@ -16,7 +16,13 @@ VARIABLE $ClaroMax79Chip "Claro Max 79(Chip)"
 VARIABLE $ClaroMax119Chip "Claro Max 119(Chip)"
 VARIABLE $ClaroMax189Chip "Claro Max 189(Chip)"
 VARIABLE $ClaroMax219Chip "Claro Max 219(Chip)"
+
+variable $textoPLAN11 '$VarPlan1'
 @@----------EQUIPO
+
+VARIABLE $textoEstado "-"
+VARIABLE $textoEstado "VarEstado1"
+
 VARIABLE $ClaroMax29 "Claro Max 29"
 VARIABLE $ClaroMax49 "Claro Max 49"
 VARIABLE $ClaroMax39 "Claro Max 39"
@@ -136,13 +142,15 @@ esperar 4
 irpopup 3
 listarpopups
 encontrar id dgInteracion
-
 esperar 3
 variable $TIPIFICACION "POSTPAGO - VARIACIÓN - ESTADO DE LA LÍNEA/CLIENTE - MIGRACIÓN DE PLAN"
 VARIABLE $EMARIO "E326543"
 VARIABLE $EJAMES "E331161"
+VARIABLE $ELEO "ESPEREMOS E DE LEO"
 VARIABLE $JAMES "JAMES"
 variable $MARIO "MARIO"
+variable $LEO "LEO"
+
 
 CANTIDADPOPUPS GUARDAREN $POPUP
 VARIABLE $cuatro 4
@@ -152,6 +160,7 @@ VARIABLE $ESTADO "ERROR"
 VARIABLE $SUBESTADO "ERROR LANTECIA DE SISTEMA"
 VARIABLE $BACKOFFICE "-BOOT-!"
 variable $CF1 $CF 
+continuaren @finalErrorPopups
 @continuarsinerror
 VALORCELDA id dgInteracion 1 2 GUARDAREN $TIPIFICACION1
 VALORCELDA id dgInteracion 1 3 GUARDAREN $login
@@ -238,7 +247,6 @@ CONTINUAREN @FinalCaso10
 @continuar10
 @SIGUIENTEPASO10
 listarpopups
-
 irpopup 2
 esperar 1 
 si contenidoen {$control} id lblPlanActual entonces @reporteCasoControl sino @ContinuarControl
@@ -299,10 +307,14 @@ si comparar igual $contador1 $cerocero @salirError sino @generarTry
 irpopup 1
 recuadro -1
 recuadro i2
+
+
+
 variable $Dos 2
 ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFacturacion1
 variable $VarClicoFacturacion
 VARIABLE $DIEZNUMERO 10
+
 SI COMPARAR MENOR $VarClicoFacturacion1 $DIEZNUMERO ENTONCES @CALCULARNUEVOCICLO SINO @NOCALCULARCICLO
 @CALCULARNUEVOCICLO
 FUNCION EXTRAE $VarClicoFacturacion1 -1 1 GUARDAREN $VarClicoFacturacion
@@ -326,15 +338,47 @@ CONTINUAREN @FinalCaso14
 @continuar14
 recuadro -1
 esperar 1
+@@ @FINALCARGARFRAME31
 recuadro i3
 @@---extraigo ¿variable plan para una futura accion (caso 20)
 ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
+
+continuaren @saltocargarframe 
+
+
+@@---------------------------------------------esperamos funcion eliminar variable 
+variable $VarPlan2 $VarPlan1
+
+si comparar identico $VarPlan2 $textoPLAN11 entonces @volverejecutarframe31 sino @exitoframe31
+@volverejecutarframe31
+@@agregar booton buscar para cargar nuevamente los datos Y ELEIMINAR VENTANA EMERGENTE
+@@ accion id imgBuscar clic 
+variable $ESTADO "Error"
+variable $SUBESTADO "NO CARGO FRAME 3"
+CONTINUAREN @FINALCARGARFRAME31
+@exitoframe31
+variable $VarEstado2 $VarEstado1
+si comparar identico $VarEstado $textoEstado entonces @volverejecutarframe3 sino @exitoframee3
+@volverejecutarframe3
+@@agregar booton buscar para cargar nuevamente los datos Y ELEIMINAR VENTANA EMERGENTE
+variable $ESTADO "Error"
+variable $SUBESTADO "NO CARGO FRAME 3"
+CONTINUAREN @FINALCARGARFRAME3}
+@exitoframee3
+
+@@-------------------------------------------------------------------------------------------------
+
+@saltocargarframe 
+
 ATRIBUTO id lblCombo contenido GUARDAREN $VarComboPlan
 @@-----############################---Caso 18---listo
 ATRIBUTO id lblEstado contenido GUARDAREN $VarEstado
+
+esperar 2 
 variable $VarEstadoDesactivo "Desactivo"
 esperar 1 
 encontrar id 0
+
 si comparar identico $VarEstado $VarEstadoDesactivo ENTONCES @reporteCaso18 SINO @ContinuarCaso18
 @ContinuarCaso18
 CONTINUAREN @siguiente18
@@ -354,15 +398,14 @@ FUNCION ULTIMOENTEROSMART $5TONIVEL GUARDAREN $PLAN1
 COMPARAR MENOR $VarLimite $PLAN1;
 encontrar id 0
 SI COMPARAR MENOR $VarLimite $PLAN1 ENTONCES @reporteCaso8 SINO @CONTINUAR8
-@CONTINUAR8
-CONTINUAREN @SiguerCaso8
 @reporteCaso8
 VARIABLE $ESTADO "PENDIENTE POR REVISAR"
 VARIABLE $SUBESTADO "LIMITE DE CREDITO"
 VARIABLE $BACKOFFICE "-BOOT-"
 variable $CF1 $CF 
 CONTINUAREN @FinalCaso8
-@SiguerCaso8
+@CONTINUAR8
+
 RECUADRO -1
 esperar 1
 irpopup 2
@@ -431,7 +474,6 @@ SI COMPARAR IGUAL $POPUP $CuatroCuatro ENTONCES @continuarCorrectoPopup3 sino  @
 @TerminarErrorPopup3
 funcion evalua $contador-$UnoUno guardaren $contador1
 VARIABLE $contador $contador1
-
 si comparar igual $contador1 $cerocero @ErrorPopup3 sino @GeneraTrypopup3
 @ErrorPopup3
 variable $ESTADO "ERROR"
@@ -442,11 +484,9 @@ IRPOPUP 3
 @@--------@@#######################-----caso 11 - NO EJECUTA
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
-
 variable $CincoCinco 5
 variable $contador 3
 variable $UnoUno 1
-
 @generarTryCaso11
 accion id cmdIteracion clic M2
 esperar 1
@@ -503,14 +543,11 @@ CONTINUAREN @finalCaso6
 @SIGUIENTEPASO6
 @fin6
 @seguir6total
-
 @@------------------------
 @@--------@@#######################-----caso 16-----PENDIENTE
-
 @@---generamos un pequeño try para su caida en VALORCELDA
 esperar 1
 VALORCELDA id dgInteracion 1 2 GUARDAREN $Vartipificacion
-
 VARIABLE $VarDesistio "POSTPAGO - VARIACIÓN - SERVICIOS - DESISTIMIENTO DE SOLICITUD"
 COMPARAR IDENTICO $Vartipificacion $VarDesistio
 SI COMPARAR IDENTICO $Vartipificacion $VarDesistio ENTONCES @reporteCaso16 SINO @CONTINUAR16
@@ -533,9 +570,6 @@ variable $UnoUno 1
 variable $cinco 5
 @@saltar para atraz--btFactura
 @generarTryInteracion
-
-
-
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
 esperar 1
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
@@ -553,12 +587,10 @@ accion id txtNotas clic
 atributo id txtNotas contenido guardaren $texto
 FUNCION EXTRAE $texto 0 14 GUARDAREN $VarOmitir
 @@SI TXT NOTAS NO EXISTE CAER (SISTEMA COLGADO)
-
 @@--------@@#######################-----caso 13-----PENDIENTE
 esperar 1
 encontrar id 0
 @@--no esta validando bien probar internamente  SI contenidoenlinea {$OMITIR,$Gestion} id txtNotas 
-
 si contenidoen {$OMITIR,$gestion} id txtNotas ENTONCES @reporteCaso13 SINO @SeguirCaso13
 @reporteCaso13
 VARIABLE $ESTADO "CAIDA"
@@ -567,14 +599,12 @@ VARIABLE $BACKOFFICE "-BOOT-"
 variable $CF1 $CF 
 CONTINUAREN @FinalCaso13
 @SeguirCaso13
-
 @@--------@@#######################-----caso 20-----PENDIENTE---------!!!
-
 @@GENERO SALTO PARA VALIDAR PENDIENTE-------------------------
-
-
-
 esperar 1
+
+
+
 contenidoenlinea {$VarPlan,$TextoPlan,$TextoNuevo} id txtNotas
 esperar 1
 SI contenidoenlinea {$TextoNuevo,$TextoPlan,$VarPlan} id txtNotas ENTONCES @reporteCaso20 SINO @CONTINUAR20
@@ -584,27 +614,12 @@ VARIABLE $SUBESTADO "CONCRETADO"
 VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @FinalCaso20
 @CONTINUAR20
-
-
 @@--------@@#######################-----caso --05--PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-
 variable $5TONIVEL
 variable $PLANTEXTO "plan"
 VARIABLE $NUEVO "Nuevo"
 VARIABLE $actual "actual"
-
-contenidoenlinea {$5TONIVEL,$PLANTEXTO,$MODALIDAD} id txtNotas
-esperar 1
-SI contenidoenlinea {$5TONIVEL,$PLANTEXTO,$MODALIDAD} id txtNotas ENTONCES @verificar05e11 SINO @reporteCaso511
-@reporteCaso511
-VARIABLE $ESTADO "PENDIENTE POR REVISAR"
-VARIABLE $SUBESTADO "REVISAR POR CRM"
-VARIABLE $BACKOFFICE "-BOOT-"
-CONTINUAREN @FinalCaso511
-@verificar05e11
-
-
-contenidoenlinea {$4TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas
+contenidoenlinea {$5TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas
 esperar 1
 SI contenidoenlinea {$5TONIVEL,$PLANTEXTO,$NUEVO} id txtNotas ENTONCES @verificar05e SINO @reporteCaso5
 @reporteCaso5
@@ -613,16 +628,11 @@ VARIABLE $SUBESTADO "MALA INTERACCION SPP"
 VARIABLE $BACKOFFICE "-BOOT-"
 CONTINUAREN @FinalCaso5
 @verificar05e
-
-
-
 @@-----------------------------------------------------------
-
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 irpopup 1
 ESPERAR 1
-
 @generarTryCasoVentana5
 accion id tuMen0 clic
 ESPERAR 2
@@ -639,7 +649,6 @@ SI COMPARAR IGUAL $POPUP $CincoCinco ENTONCES @SeguirExitoTry5 SINO @restarUnoCa
 funcion evalua $contador-$UnoUno guardaren $contador1
 si comparar igual $contador1 $cerocero @SalirErrorCasoVen5 sino @generarTryCasoVentana5
 @SeguirExitoTry5
-@@
 @@--------@@#######################-----caso 19
 @@
 irpopup 5
@@ -654,11 +663,9 @@ accion id txtNota escribe $texto
 esperar 1
 variable $VarClicoFacturacion
 variable $detexto "de"
-variable $VarComboPlan
 esperar 1
 @@creamos un salto hasta corregir mala interacion spp------------------------------------------------------
 @@DATO NO RELEVANTE 
-
 ESPERAR 1
 si contenidoenlinea {$clico,$VarClicoFacturacion,$detexto} id txtNota entonces @verificaCasospp sino @reporteCasospp
 @verificaCasospp
@@ -717,22 +724,6 @@ irpopup 6
 esperar 1
 accion id rdbSinTopeConsumo clic
 accion id rdbSinTopeConsumo clic
-
-variable $numero "PORT-IN"
-
-si contenidoenlinea {$numero,$VarClicoFacturacion,$detexto} id txtNota entonces @verificaCasospp1 sino @reporteCasospp1
-@verificaCasospp1
-SI contenidoen {$VarTelefono,$VarCliente,$VarDni} id txtNota ENTONCES @continuarCaso041 SINO @reporteCaso41
-@reporteCaso41
-@ReporteSalto1
-@reporteCaso521
-@reporteCasospp1
-VARIABLE $ESTADO "PENDIENTE POR REVISAR"
-VARIABLE $SUBESTADO "MALA INTERACCION SPP"
-VARIABLE $BACKOFFICE "-BOOT-"
-CONTINUAREN @FinalCaso41
-@continuarCaso041
-
 ESPERAR 1
 @@ EMPEZAMOS CON EL PRIMER COMBO -----------------------------------------------------------------------------------------------------------
 si comparar igual $lblReintegroApadece $CERO entonces @SelecionarChip sino @SelecionarEquipo
@@ -887,21 +878,28 @@ continuaren @SeDioClick20
 @SeDioClick11
 @SaltoChip
 ESPERAR 1
+@@ tomar en cuenta alerta ()
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 accion id btnAgregar clic
 esperar 1
 accion id btnAgregar clic
-esperar 1
+esperar 4
+encontrar id 0
 irpopup 5 
-ATRIBUTO id txtTotalApadeceCobrar value GUARDAREN $lblApadece
 esperar 1
 @@ Esperando solucion de jorge
 SI CONTENIDOEN {$AUTOMATICO} id txtNota entonces @SelecionarCombo1 sino @Verificar1
 @SelecionarCombo1
 si comparar identico $VarTope $TopeConsumoAutomatico entonces @MantenerTope1 sino @verificamos1
 @MantenerTope1
+ESPERAR 1
 accion id chkMantenerTopeAct clic
+esperar 1
+accion id chkMantenerTopeAct clic
+esperar 1
+accion id chkMantenerTopeAct clic
+esperar 1
 continuaren @SeSelecionoTopeAutomatico
 @verificamos1
 accion id rdbConTopeConsumo clic
@@ -945,6 +943,8 @@ CONTINUAREN @FinalMalaInteraccionspp
 @SeSelecionoTopeAutomatico
 esperar 1
 @@esperar respuesta apadece---------####
+
+ATRIBUTO id txtTotalApadeceCobrar value GUARDAREN $lblApadece
 VARIABLE $SINAPADECE 0
 esperar 1
 SI COMPARAR IGUAL $SINAPADECE $lblApadece ENTONCES @continuarCaso19 SINO @ReporteCaso19
@@ -958,10 +958,10 @@ CONTINUAREN @FINALAPADECE
 VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 esperar 1
+accion id btnGrabar clic M5
+esperar 4
 accion id btnGrabar clic M10
-esperar 1
-accion id btnGrabar clic M10
-ESPERAR 2
+ESPERAR 7
 VARIABLE $ALERTA
 VARIABLE $EXISTEALERTAEXITOSA "Proceso ejecutado correctamente"
 encontrar id 0
@@ -1007,9 +1007,13 @@ variable $CF1 $CF
 @FinalCaso16
 @FinalCaso17
 @FinalCaso18
+@FinalCaso20
 @FinalErrorNoSelecionoplan
 @FINALAPADECE
 @@Etiquetas final con errores
+
+@finalErrorPopups
+
 @@ErrorerVentanas
 @FinalMalaInteraccionspp
 @ErrorPopup3Final
@@ -1022,4 +1026,9 @@ variable $CF1 $CF
 @fINALCRM2EQUIPO
 @FINALPROGRAMACION
 @FINALSEPROGRAMO
+@FinalCasOEXITOSO
+@FINALCARGARFRAME31
+
+@FINALCARGARFRAME3
+
 TERMINAR

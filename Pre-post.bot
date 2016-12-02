@@ -277,38 +277,6 @@ ESPERAR 1
 @Continuartodo6
 ESPERAR 2
 
-SI COMPARAR IGUAL $filastabla $UNO ENTONCES @VERIFICAFILAS1 SINO @CONTINUARFILA21
-@CONTINUARFILA21
-VALORCELDA id tbHistoricoVentasDet 1 8 GUARDAREN $VarPrecioVenta
-VALORCELDA id tbHistoricoVentasDet 2 8 GUARDAREN $VarPrecioVenta2
-
-variable $inicialCosto $VarPrecioVenta2
-variable $inicialCosto
-
-si comparar menor $VarPrecioVenta $iniciarCosto entonces @Selecionar21 sino @Selecionar11
-@selecionar21
-VALORCELDA id tbHistoricoVentasDet 2 3 GUARDAREN $VarModeloEquipo
-VALORCELDA id tbHistoricoVentasDet 2 10 GUARDAREN $VarDescripcionPlan
-FUNCION ULTIMOENTEROSMART $VarDescripcionPlan GUARDAREN $PLANNUMERO
-@@ variable numero de telefono
-VALORCELDA id tbHistoricoVentasDet 2 13 GUARDAREN $NumeroTelefono
-@@ variable campaña
-VALORCELDA id tbHistoricoVentasDet 2 12 GUARDAREN $VarCampana
-variable $VarPrecioVenta $VarPrecioVenta2
-continuaren @SeSeleciono21
-@Selecionar11
-
-@VERIFICAFILAS1
-VALORCELDA id tbHistoricoVentasDet 1 3 GUARDAREN $VarModeloEquipo
-VALORCELDA id tbHistoricoVentasDet 1 10 GUARDAREN $VarDescripcionPlan
-FUNCION ULTIMOENTEROSMART $VarDescripcionPlan GUARDAREN $PLANNUMERO
-@@ variable numero de telefono
-VALORCELDA id tbHistoricoVentasDet 1 13 GUARDAREN $NumeroTelefono
-@@ variable campaña
-VALORCELDA id tbHistoricoVentasDet 1 12 GUARDAREN $VarCampana
-
-@SeSeleciono21
-
 @@    71262889
 @@---verificar nuemro de celular
 @@condicionar tabla

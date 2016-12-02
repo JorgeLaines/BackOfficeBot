@@ -1,0 +1,447 @@
+﻿MODO REINTENTAR APAGADO
+VARIABLE $Conexion20ME "Conexion 20-ME"
+VARIABLE $Conexion25ME "Conexion 25-ME"
+VARIABLE $ClaroConexionEspecial1990 "Claro Conexión Especial 19.90"
+VARIABLE $ClaroConexionEspecial4290 "Claro Conexión Especial 42.90"
+VARIABLE $COMBOFULLNAVEGA "COMBO FULL NAVEGA"
+VARIABLE $COMBOFULLCONVERSA "COMBO FULL CONVERSA"
+VARIABLE $COMBOFULLTOTAL "COMBO FULL TOTAL"
+VARIABLE $ClaroMax99Chip "Claro Max 99(Chip)"
+VARIABLE $ClaroMax149Chip "Claro Max 149(Chip)"
+VARIABLE $ClaroMax29Chip "Claro Max 29(Chip)"
+VARIABLE $ClaroMax39Chip "Claro Max 39(Chip)"
+VARIABLE $ClaroMax49Chip "Claro Max 49(Chip)"
+VARIABLE $ClaroMax59Chip "Claro Max 59(Chip)"
+VARIABLE $ClaroMax79Chip "Claro Max 79(Chip)"
+VARIABLE $ClaroMax119Chip "Claro Max 119(Chip)"
+VARIABLE $ClaroMax189Chip "Claro Max 189(Chip)"
+VARIABLE $ClaroMax219Chip "Claro Max 219(Chip)"
+@@----------EQUIPO
+VARIABLE $ClaroMax29 "Claro Max 29"
+VARIABLE $ClaroMax49 "Claro Max 49"
+VARIABLE $ClaroMax39 "Claro Max 39"
+VARIABLE $ClaroMax79 "Claro Max 79"
+VARIABLE $ClaroMax99 "Claro Max 99"
+VARIABLE $ClaroMax189 "Claro Max 189"
+VARIABLE $ClaroMax289 "Claro Max 289"
+VARIABLE $ClaroMax119 "Claro Max 119"
+VARIABLE $ClaroMax59 "Claro Max 59"
+VARIABLE $ClaroMax149 "Claro Max 149"
+@@dgLista_optSel_27
+variable $VariablePendienteOctubre "PENDIENTE DE ACT. NOVIEMBRE"
+variable $VariablePendienteNoviembre "PENDIENTE DE ACT. DICIEMBRE"
+variable $AUTOMATICO "AUTOM"
+variable $CERO "CERO"
+variable $TopeConsumoCero "Tope de Consumo Cero"
+variable $TopeConsumoAutomatico "Tope de Consumo Auto"
+variable $varCallCenter "CALL CENTER POSTPAGO"
+variable $clico "CICLO"
+variable $factura "factura"
+VARIABLE $OMITIR "omitir"
+variable $gestion "gesti"
+variable $control "control" 
+variable $TextoPlan "Plan"
+variable $TextoNuevo "Nuevo"
+VARIABLE $FECHAHOY $$HOY
+esperar 1
+FUNCION EXTRAE $FECHAHOY 0 2 GUARDAREN $DiaActual
+esperar 1
+iniciar
+navegar http://intranetsiacpost/siacpost-frontend/
+IRPOPUP 1
+esperar 1
+accion id imgIngresar clic
+ESPERAR 3
+accion id txtNombreTelefono escribe $MSISDN
+esperar 1
+irpopup 1
+@@--1----- ############################# caso 17- --------------------listo
+VARIABLE $SINALERTA "SINALERTA"
+VARIABLE $ALERTA  $SINALERTA
+esperar 1
+accion id imgBuscar clic M2
+@@variable
+ESPERAR 2
+VARIABLE $ALERTA
+VARIABLE $EXISTEPOSTPAGO "El Nro Ingresado no es un Postpago"
+encontrar id 0
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASO17 SINO @VERIFICARCASO17
+@VERIFICARCASO17
+encontrar id 0
+SI COMPARAR IDENTICO $ALERTA $EXISTEPOSTPAGO ENTONCES @CASOEXISTEPOSTPAGO SINO @SIGUIENTEPASO171
+@CASOEXISTEPOSTPAGO
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "NO ES POST PAGO"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @FinalCaso17
+@SIGUIENTEPASO171
+@SIGUIENTEPASO17
+
+CANTIDADPOPUPS GUARDAREN $POPUP
+VARIABLE $TRES 3
+SI COMPARAR IGUAL $POPUP $TRES ENTONCES @ELIMINAPOPUP SINO @continuarCasoPopup
+@ELIMINAPOPUP
+esperar 1
+irpopup 2
+ACCION ID btnCerrar CLIC
+esperar 1
+ACCION ID btnCerrar CLIC
+ELIMINARULTIMOPOPUP
+@continuarCasoPopup
+VARIABLE $SINALERTA "SINALERTA"
+VARIABLE $ALERTA  $SINALERTA
+irpopup 1
+ESPERAR 2
+recuadro i2
+variable $Dos 2
+ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFactu
+recuadro -1
+variable $contador 3
+@generarTryCasoVentana55
+accion id tuMen0 clic
+ESPERAR 2
+accion id op_0_6 clic O4
+esperar 4
+accion id op_0_6 clic O3
+esperar 1
+variable $dos 2
+
+variable $UnoUno 1
+variable $cerocero 0
+esperar 5
+ATRIBUTO id lblPlanActual contenido GUARDAREN $lblPlanActualCliente
+esperar 2
+CANTIDADPOPUPS GUARDAREN $POPUP
+SI COMPARAR IGUAL $POPUP $dos ENTONCES @SeguirExitoTry55 SINO @restarUnoCasoVen55
+@restarUnoCasoVen55
+funcion evalua $contador-$UnoUno guardaren $contador1
+VARIABLE $contador $contador1
+si comparar igual $contador1 $cerocero @SalirErrorCasoVen55 sino @generarTryCasoVentana55
+@SeguirExitoTry55
+VARIABLE $ALERTA
+@@-------------------###################---caso 12
+VARIABLE $ALERTA
+VARIABLE $EXISTEPROGRAMACIONES "Existen Programaciones Pendientes"
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTE12 SINO @VERIFICARCASO12
+@VERIFICARCASO12
+@@
+SI COMPARAR IDENTICO $ALERTA $EXISTEPROGRAMACIONES ENTONCES @CASOEXISTEPROGRAMACIONES SINO @SIGUIENTEPASO12
+@CASOEXISTEPROGRAMACIONES
+irpopup 1
+accion id tuMen2 clic
+accion id op_2_3 clic
+ESPERAR 1
+accion id op_2_3 clic
+esperar 4
+irpopup 3
+listarpopups
+encontrar id dgInteracion
+
+esperar 3
+variable $TIPIFICACION "POSTPAGO - VARIACIÓN - ESTADO DE LA LÍNEA/CLIENTE - MIGRACIÓN DE PLAN"
+VARIABLE $EMARIO "E326543"
+VARIABLE $EJAMES "E331161"
+VARIABLE $JAMES "JAMES"
+variable $MARIO "MARIO"
+
+CANTIDADPOPUPS GUARDAREN $POPUP
+VARIABLE $cuatro 4
+SI COMPARAR IGUAL $POPUP $cuatro ENTONCES @continuarsinerror SINO @erroreniniciarventana
+@erroreniniciarventana
+VARIABLE $ESTADO "ERROR"
+VARIABLE $SUBESTADO "ERROR LANTECIA DE SISTEMA"
+VARIABLE $BACKOFFICE "-BOOT-!"
+variable $CF1 $CF 
+@continuarsinerror
+VALORCELDA id dgInteracion 1 2 GUARDAREN $TIPIFICACION1
+VALORCELDA id dgInteracion 1 3 GUARDAREN $login
+
+SI COMPARAR IDENTICO $TIPIFICACION1 TIPIFICACION entonces @SEPROGRAMOVERIF SINO @VERIFICAREJAMES1
+@SEPROGRAMOVERIF
+SI COMPARAR IDENTICO $login $EMARIO entonces @SIESTAINCLUIDOMARIO SINO @NOESTAINCLUIDOMARIO
+@NOESTAINCLUIDOMARIO
+SI COMPARAR IDENTICO $login $EJAMES entonces @SIESTAINCLUIDOJAMES SINO @NOESTAINCLUIDOJAMES
+@NOESTAINCLUIDOJAMES
+@VERIFICAREJAMES1
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "PROGRAMACIONES PENDIENTES"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FINALPROGRAMACION
+
+@SIESTAINCLUIDOMARIO
+@SIESTAINCLUIDOJAMES
+variable $Dos 2
+FUNCION EXTRAE $FECHAHOY 0 2 GUARDAREN $DiaActual
+funcion evalua $VarClicoFactu-$Dos guardaren $CicloMenosDos
+si comparar menorigual $DiaActual $CicloMenosDos entonces @ReporteFinal sino @Verificar
+@ReporteFinal
+VARIABLE $ESTADO "SE PROGRAMO"
+VARIABLE $SUBESTADO $VariablePendienteOctubre
+variable $CF1 $CF 
+CONTINUAREN @SeValido1
+@Verificar
+VARIABLE $ESTADO "SE PROGRAMO"
+VARIABLE $SUBESTADO $VariablePendienteNoviembre
+variable $CF1 $CF 
+@SeValido1
+CONTINUAREN @FINALSEPROGRAMO
+@SIGUIENTEPASO12
+@SIGUIENTE12
+
+@@--------@@#######################-----caso 02
+VARIABLE $ALERTA
+VARIABLE $EXISTEDEUDAPAGO "Existe Deuda de Pago"
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @seguir2 SINO @VERIFICARCASO2
+@VERIFICARCASO2
+SI COMPARAR IDENTICO $ALERTA $EXISTEDEUDAPAGO ENTONCES @CASOEXISTEDEUDADEPAGO SINO @SIGUIENTEPASO2
+@CASOEXISTEDEUDADEPAGO
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "DEUDA"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+irpopup 1
+recuadro i5
+@@--------##################---caso 3---listo
+esperar 1
+ATRIBUTO id lblDisputa contenido GUARDAREN $VarDisputa
+VARIABLE $UNO 0
+COMPARAR IGUAL $VarDisputa $UNO;
+SI COMPARAR IGUAL $VarDisputa $UNO ENTONCES @CONTINUAR3 SINO @reporteCaso3
+@CONTINUAR3
+CONTINUAREN @SIGUIENTE2
+@reporteCaso3
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "MONTO EN DISPUTA/DEUDA"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalCaso3
+@SIGUIENTE2
+CONTINUAREN @FinalCaso2
+@seguir2
+@SIGUIENTEPASO2
+recuadro -1
+VARIABLE $ALERTA
+ESPERAR 1
+VARIABLE $EXISTEALERTA10 "Existe Bloqueo/Suspensión en el Contrato"
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASO10 SINO @VERIFICARCASO10
+@VERIFICARCASO10
+@@-----------------------------JL06: Con la siguiente instrucción compruebo si el mensaje de la alerta es igual al de $EXISTEALERTA10, si son iguales grabo mi caso, sino continuo
+SI COMPARAR IDENTICO $ALERTA $EXISTEALERTA10 ENTONCES @CASOEXISTEALERTA10 SINO @continuar10
+@CASOEXISTEALERTA10
+@@JL07: Con la siguientes 3 instrucciones grabo mi caso y luego termino el script
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "CONTRATO BLOQUEADO"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalCaso10
+@continuar10
+@SIGUIENTEPASO10
+irpopup 2
+esperar 1 
+si contenidoen {$control} id lblPlanActual entonces @reporteCasoControl sino @ContinuarControl
+@reporteCasoControl
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "ERROR DE SISTEMA"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalErrorSistemaControl
+@ContinuarControl
+ATRIBUTO id lblDniRuc contenido GUARDAREN $VarDni
+ATRIBUTO id lblTelefono contenido GUARDAREN $VarTelefono
+esperar 1
+ATRIBUTO id lblCliente contenido GUARDAREN $VarCliente
+esperar 1
+ATRIBUTO id lblTopeConsumoActual contenido GUARDAREN $VarTope1
+funcion extrae $VarTope1 0 20 guardaren $VarTope
+variable $VarTope
+esperar 2
+accion id btnCerrar clic
+esperar 1
+accion id btnCerrar clic
+esperar 1
+ELIMINARULTIMOPOPUP
+irpopup 1
+recuadro i4
+variable $contador 3
+variable $cerocero 0
+variable $UnoUno 1
+VARIABLE $TRES 3
+@@saltar para atraz--btFactura
+@generarTry
+VARIABLE $SINALERTA "SINALERTA"
+VARIABLE $ALERTA  $SINALERTA
+accion id btnFacturacion clic M3
+ESPERAR 1
+accion id btnFacturacion clic M3
+ESPERAR 1
+VARIABLE $ALERTA
+VARIABLE $EXISTEPOSTPAGO "Alerta factura."
+SI COMPARAR IDENTICO $ALERTA $SINALERTA ENTONCES @SIGUIENTEPASO13ALERTA SINO @VERIFICARCASO13ALERTA
+@VERIFICARCASO13ALERTA
+SI COMPARAR identico $ALERTA $EXISTEPOSTPAGO ENTONCES @CASOEXISTEALERT SINO @GO
+@CASOEXISTEALERT
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "NO ES VENTA"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalCaso13ALERTA
+@GO
+@SIGUIENTEPASO13ALERTA
+CANTIDADPOPUPS GUARDAREN $POPUP
+SI COMPARAR IGUAL $POPUP $TRES ENTONCES @SeguirTryFactura SINO @restarUno
+@restarUno
+funcion evalua $contador-$UnoUno guardaren $contador1
+si comparar igual $contador1 $cerocero @salirError sino @generarTry
+@SeguirTryFactura
+irpopup 1
+recuadro -1
+recuadro i2
+variable $Dos 2
+ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFacturacion1
+variable $VarClicoFacturacion
+VARIABLE $DIEZNUMERO 10
+SI COMPARAR MENOR $VarClicoFacturacion1 $DIEZNUMERO ENTONCES @CALCULARNUEVOCICLO SINO @NOCALCULARCICLO
+@CALCULARNUEVOCICLO
+FUNCION EXTRAE $VarClicoFacturacion1 -1 1 GUARDAREN $VarClicoFacturacion
+CONTINUAREN @SALTOCICLO
+@NOCALCULARCICLO
+ATRIBUTO id lblCicloFact contenido GUARDAREN $VarClicoFacturacion
+@SALTOCICLO
+funcion evalua $VarClicoFacturacion-$Dos guardaren $CicloMenosDos
+variable $CicloMenosDos
+@@-2----############################---caso 14   956256478---LISTO
+ATRIBUTO id lblModalidad contenido GUARDAREN $VarModalidad
+variable $Corporativo "Corporativo - JANUS"
+esperar 1
+si comparar identico $Corporativo $VarModalidad ENTONCES @reporteCaso14 SINO @continuar14
+@reporteCaso14
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "CORPORATIVO"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalCaso14
+@continuar14
+recuadro -1
+esperar 1
+recuadro i3
+@@---extraigo ¿variable plan para una futura accion (caso 20)
+ATRIBUTO id lblPlan contenido GUARDAREN $VarPlan
+ATRIBUTO id lblCombo contenido GUARDAREN $VarComboPlan
+@@-----############################---Caso 18---listo
+ATRIBUTO id lblEstado contenido GUARDAREN $VarEstado
+variable $VarEstadoDesactivo "Desactivo"
+esperar 1 
+encontrar id 0
+si comparar identico $VarEstado $VarEstadoDesactivo ENTONCES @reporteCaso18 SINO @ContinuarCaso18
+@ContinuarCaso18
+CONTINUAREN @siguiente18
+@reporteCaso18
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "LINEA DESACTIVA"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalCaso18
+@siguiente18
+recuadro -1
+recuadro i2
+esperar 3
+@@-------##########################-Caso 8 ----listo------PENDIENTE TOPE 0 = 5  preguntar a janes
+ATRIBUTO id lblLimiteCredito contenido GUARDAREN $VarLimite
+FUNCION ULTIMOENTEROSMART $5TONIVEL GUARDAREN $PLAN1
+COMPARAR MENOR $VarLimite $PLAN1;
+encontrar id 0
+SI COMPARAR MENOR $VarLimite $PLAN1 ENTONCES @reporteCaso8 SINO @CONTINUAR8
+@CONTINUAR8
+CONTINUAREN @SiguerCaso8
+@reporteCaso8
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "LIMITE DE CREDITO"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+CONTINUAREN @FinalCaso8
+@SiguerCaso8
+RECUADRO -1
+esperar 1
+irpopup 2
+@@comparar todos los campos de la fila variable y sacar un promedio
+@@
+@@-------###################----caso 9   -------------------corregido -listo
+@@generamos un try 
+CANTIDADPOPUPS GUARDAREN $POPUP
+VARIABLE $tres 3
+@@VARIABLE GENERAR TRY
+FUNCION ULTIMOENTEROSMART $5TONIVEL GUARDAREN $NUEVOPLAN
+VARIABLE $NUEVOPLAN
+FUNCION EVALUA $NUEVOPLAN-$CF GUARDAREN $valorCF1
+variable $Diez10 10
+encontrar id 0
+@@convirtiendo en positivo la diferencia entre nuevo plan y cargo fijo
+VARIABLE $CERO 0
+SI COMPARAR menor $ValorCF1 $CERO entonces @convertirpositivo sino @continuarpositivo 
+@convertirpositivo
+si comparar mayor $ValorCF1 $Diez10 entonces @funciondosdecimales sino @funcionundecimal
+@funciondosdecimales
+FUNCION EXTRAE $valorCF1 1 2 GUARDAREN $valorCF
+continuaren @seguirdosdecimales
+@funcionundecimal
+FUNCION EXTRAE $valorCF1 1 1 GUARDAREN $valorCF
+@seguirdosdecimales
+@continuarpositivo
+si comparar mayor $valorCF $Diez10 ENTONCES @VerificaFactura sino @seguirCasoDownsell
+@VerificaFactura
+ESPERAR 1
+CALCULAR TAGNAME TABLE[INDICE:1] 3[0-3] PROMEDIO GUARDAREN $VarPromedio
+variable $CF1 $VarPromedio
+variable $Cf1
+VARIABLE $DIEZ 10
+VARIABLE $CF1
+FUNCION EVALUA $NUEVOPLAN-$CF1 GUARDAREN $NuevoValor
+encontrar id 0
+si comparar mayor $NuevoValor $Diez10  ENTONCES @reporteCaso9 SINO @ContinuarCaso9
+@ContinuarCaso9
+continuaren @siguienteCaso9
+@reporteCaso9
+VARIABLE $ESTADO "PENDIENTE POR REVISAR"
+VARIABLE $SUBESTADO "DOWNSELL"
+VARIABLE $BACKOFFICE "-BOOT-"
+variable $CF1 $CF 
+continuaren @FinalCaso9
+@siguienteCaso9
+@seguirCasoDownsell
+variable $CF1 $CF 
+recuadro -1
+@@
+@@DATOS A REVISAR = ESTADO DE LA LINEA / LIMITE DE CREDITO /MONTO EN DISPUTA
+variable $contador 3
+@GeneraTrypopup3
+irpopup 1
+accion id tuMen2 clic
+accion id op_2_3 clic
+ESPERAR 1
+accion id op_2_3 clic
+
+esperar 3
+CANTIDADPOPUPS GUARDAREN $POPUP
+variable $POPUP
+variable $CuatroCuatro 4
+
+variable $UnoUno 1
+variable $cerocero 0
+
+
+SI COMPARAR IGUAL $POPUP $CuatroCuatro ENTONCES @continuarCorrectoPopup3 sino  @TerminarErrorPopup3
+@TerminarErrorPopup3
+funcion evalua $contador-$UnoUno guardaren $contador1
+VARIABLE $contador $contador1
+
+si comparar igual $contador1 $cerocero @ErrorPopup3 sino @GeneraTrypopup3
+@ErrorPopup3
+variable $ESTADO "ERROR"
+variable $SUBESTADO "LATENCIA DE SISTEMA"
+CONTINUAREN @ErrorPopup3Final
+
+@continuarCorrectoPopup3
+
+@ErrorPopup3Final
+
