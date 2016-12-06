@@ -34,8 +34,8 @@ VARIABLE $ClaroMax119 "Claro Max 119"
 VARIABLE $ClaroMax59 "Claro Max 59"
 VARIABLE $ClaroMax149 "Claro Max 149"
 @@dgLista_optSel_27
-variable $VariablePendienteOctubre "PENDIENTE DE ACT. NOVIEMBRE"
-variable $VariablePendienteNoviembre "PENDIENTE DE ACT. DICIEMBRE"
+variable $VariablePendienteOctubre "PENDIENTE DE ACT. DICIEMBRE"
+variable $VariablePendienteNoviembre "PENDIENTE DE ACT. ENERO"
 variable $AUTOMATICO "AUTOM"
 variable $CERO "CERO"
 variable $TopeConsumoCero "Tope de Consumo Cero"
@@ -425,34 +425,26 @@ encontrar id 0
 VARIABLE $CERO 0
 SI COMPARAR menor $ValorCF1 $CERO entonces @convertirpositivo sino @continuarpositivo 
 @convertirpositivo
-si comparar mayor $ValorCF1 $Diez10 entonces @funciondosdecimales sino @funcionundecimal
+variable $menosDiez10 -10
+si comparar menor $ValorCF1 $menosDiez10 entonces @funciondosdecimales sino @funcionundecimal
 @funciondosdecimales
 FUNCION EXTRAE $valorCF1 1 2 GUARDAREN $valorCF
+variable $valorCF1 $valorCF
 continuaren @seguirdosdecimales
 @funcionundecimal
 FUNCION EXTRAE $valorCF1 1 1 GUARDAREN $valorCF
+variable $valorCF1 $valorCF
 @seguirdosdecimales
 @continuarpositivo
-si comparar mayor $valorCF $Diez10 ENTONCES @VerificaFactura sino @seguirCasoDownsell
+si comparar mayor $valorCF1 $Diez10 ENTONCES @VerificaFactura sino @seguirCasoDownsell
 @VerificaFactura
 ESPERAR 1
 CALCULAR TAGNAME TABLE[INDICE:1] 3[0-3] PROMEDIO GUARDAREN $VarPromedio
-variable $CF1 $VarPromedio
-variable $Cf1
-VARIABLE $DIEZ 10
-VARIABLE $CF1
-FUNCION EVALUA $NUEVOPLAN-$CF1 GUARDAREN $NuevoValor
-encontrar id 0
-si comparar mayor $NuevoValor $Diez10  ENTONCES @reporteCaso9 SINO @ContinuarCaso9
-@ContinuarCaso9
-continuaren @siguienteCaso9
-@reporteCaso9
 VARIABLE $ESTADO "PENDIENTE POR REVISAR"
 VARIABLE $SUBESTADO "DOWNSELL"
 VARIABLE $BACKOFFICE "-BOOT-"
 variable $CF1 $CF 
 continuaren @FinalCaso9
-@siguienteCaso9
 @seguirCasoDownsell
 variable $CF1 $CF 
 recuadro -1
@@ -984,7 +976,7 @@ variable $CF1 $CF
 @SeValido
 CONTINUAREN @FinalCasOEXITOSO
 @SIGUIENTEPASO1711
-VARIABLE $ESTADO "ERROR"
+VARIABLE $ESTADO "PENDIENTE"
 VARIABLE $SUBESTADO $ALERTA
 variable $CF1 $CF 
 @SIGUIENTEPASOEXITO
