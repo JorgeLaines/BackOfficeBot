@@ -26,8 +26,9 @@ variable $textomensaje "No Existen Registros"
 
 variable $Varmansajelleno "null"
 variable $Varmansajetexto "Consultar"
-
+ESPERAR 3
 ATRIBUTO id btnConsultar value GUARDAREN $Varmansajelleno
+ESPERAR 1 
 @@actualizando variable
 variable $Varmansajelleno
 
@@ -69,8 +70,6 @@ VARIABLE $OFICINA "TLVTAS MDY MASIVO"
 variable $OFICINA1 "TELEVENTAS MDY"
 
 @@  VALOR EN CELDA OBTENEMOS LAS VARIABLE PARA SU VALIDACION
-
-v
 
 VALORCELDA id dgLista 1 4 GUARDAREN $VarMigracion
 VALORCELDA id dgLista 1 5 GUARDAREN $VarEstado
@@ -129,16 +128,43 @@ CONTINUAREN @FINALNOTIENEPORTA
 
 @@sale error de http  
 @@ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%" 0 TAGNAME A[INDICE:1] CLIC
-ACCIONENTABLA ID dgLista "%PORTABILIDAD%," 0 TAGNAME A[INDICE:1] CLIC
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%MDY%" 0 TAGNAME A[INDICE:1] CLIC
 ESPERAR 1
-ACCIONENTABLA ID dgLista "%PORTABILIDAD%" 0 TAGNAME A[INDICE:1] CLIC
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%MDY%" 0 TAGNAME A[INDICE:1] CLIC
 esperar 3
 @@abrimos lupa indice 0 
-ACCIONENTABLA ID dgLista "%PORTABILIDAD%" 0 TAGNAME A[INDICE:0] CLIC
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%MDY%" 0 TAGNAME A[INDICE:0] CLIC
 esperar 1
-ACCIONENTABLA ID dgLista "%PORTABILIDAD%" 0 TAGNAME A[INDICE:0] CLIC
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%MDY%" 0 TAGNAME A[INDICE:0] CLIC
 ESPERAR 1
+
+ESPERAR 3
+CANTIDADPOPUPS GUARDAREN $POPUP3
+variable $tres 3
+si comparar identico $POPUP3 $tres entonces @continuaracciontabla1 sino @noacciontabla1
+@noacciontabla1
+
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%CAC%" 0 TAGNAME A[INDICE:1] CLIC
+ESPERAR 1
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%CAC%" 0 TAGNAME A[INDICE:1] CLIC
+esperar 3
+@@abrimos lupa indice 0 
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%CAC%" 0 TAGNAME A[INDICE:0] CLIC
+esperar 1
+ACCIONENTABLA ID dgLista "%PORTABILIDAD%,%APROBADO%,%CAC%" 0 TAGNAME A[INDICE:0] CLIC
+ESPERAR 2
+CANTIDADPOPUPS GUARDAREN $POPUP003
+si comparar identico $POPUP003 $tres entonces @continuaracciontabla2 sino @noacciontabla2
+@noacciontabla2
+variable $ESTADO "ERROR"
+variable $SUBESTADO "NO EXISTE FILAS CANDIDATAS  "POSIBLE PUNTO DE VENTA""
+CONTINUAREN @finalsinfilas
+@continuaracciontabla2
+
+@continuaracciontabla1
+
 irpopup 1
+
 ATRIBUTO id lblConsultor contenido GUARDAREN $VarlblConsultor
 FUNCION EXTRAE $VarlblConsultor 0 2 GUARDAREN $IniciarNroVendedor
 variable $E3 "E3"
@@ -203,6 +229,15 @@ irpopup 3
 esperar 10
 CANTIDADPOPUPS GUARDAREN $POPUP
 
+variable $cuatro 4
+
+si comparar igual $POPUP $cuatro entonces @sacarnumeroportar sino @nocargoventana4
+@nocargoventana4
+VARIABLE	$ESTADO "ERROR"
+VARIABLE	$SUBESTADO "NO INICIALIZO VENTANA 4"
+CONTINUAREN @FINALSINVENTANA4
+
+@sacarnumeroportar
 
 @@--22	Verificamos que el número a portar sea igual al del archivo Excel.
 VALORCELDA id dgrMovil 1 9 GUARDAREN $VarNroPortar
@@ -263,7 +298,7 @@ VARIABLE 	$LNEA $VarNroPortar
 VARIABLE	$NOMBREDELCLIENTE $VarNombreCompleto
 VARIABLE	$SEC $VarNroSec
 VARIABLE	$OPERADOR $VarCedente
-VARIABLE	$TIPODEPORTABILIDAD "NO ES POSTPAGO"
+VARIABLE	$TIPODEPORTABILIDAD "POSTPAGO"
 VARIABLE	$TIPODEVENTA "PORTABILIDAD"
 VARIABLE	$FECHAACTIVACIN "-"
 @@---estado solicitud para este caso
@@ -389,5 +424,8 @@ VARIABLE	$SUBESTADO "PORTABILIDAD"
 @FinErrorTablaLista
 @FinalPortal
 @FINALCASOLATENCIA
+@finalsinfilas
+
+@FINALSINVENTANA4
 
 terminar 

@@ -15,6 +15,8 @@ VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 esperar 1 
 accion id imgBuscar clic M3
+esperar 1
+accion id imgBuscar clic M3
 @@variable
 ESPERAR 2
 VARIABLE $ALERTA
@@ -40,11 +42,8 @@ irpopup 2
 ACCION ID btnCerrar CLIC
 ELIMINARULTIMOPOPUP
 @continuarCasoPopup
-
-@@  [spnFechaHoraActual ] id fecha actual
-
+@@  [spnFechaHoraActual ] id fecha actua
 @@se busco el cliente
-
 @@---guardar variable dni
 esperar 2
 recuadro i1
@@ -64,9 +63,6 @@ FUNCION EXTRAE $VarFechaAct1 0 10 GUARDAREN $VarFechaAct
 ATRIBUTO id lblTotalLinea contenido GUARDAREN $VarTotalLineas
 variable $VarFechaAct
 recuadro -1
-
-
-
 
 @@------############################### CASO 4  VENTA DEL MES ANTERIOR---OPTIMIZAR CON MES PENDIENTE
 @@VARIABLE FECHA DE BUSQUEDA EN EL REPORTE Excel
@@ -178,25 +174,21 @@ esperar 1
 variable $VarEstadoDesactivo "Desactivo"
 variable $Varcorporativo
 variable $corporativo "Corporativo - JANUS"
-si comparar identico $VarEstado $VarEstadoDesactivo ENTONCES @reporteCaso2 SINO @ContinuarCaso2
-@ContinuarCaso2
-CONTINUAREN @siguiente2
-@reporteCaso2
-VARIABLE $ESTADO "CAIDA"
-VARIABLE $SUBESTADO "LINEA DESACTIVA"
+
 si comparar identico $Varcorporativo $corporativo ENTONCES @Reportecasocor sino @noescorporativo
 @Reportecasocor
 VARIABLE $ESTADO "CAIDA"
 VARIABLE $SUBESTADO "CORPORATIVO"
 CONTINUAREN @FinalCaso2
 @noescorporativo
-@siguiente2
 
-
-
-
+si comparar identico $VarEstado $VarEstadoDesactivo ENTONCES @reporteCaso2 SINO @ContinuarCaso2
+@reporteCaso2
+VARIABLE $ESTADO "CAIDA"
+VARIABLE $SUBESTADO "LINEA DESACTIVA"
+continuaren @finallineadesactiva
+@ContinuarCaso2
 ESPERAR 1
-
 
 @@-----############################---Caso 8---REACTIVACION
 
