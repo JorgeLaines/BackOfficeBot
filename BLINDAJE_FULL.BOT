@@ -66,6 +66,9 @@ VARIABLE $SINALERTA "SINALERTA"
 VARIABLE $ALERTA  $SINALERTA
 esperar 1
 accion id imgBuscar clic M2
+esperar 2
+accion id imgBuscar clic M2
+esperar 1
 @@variable
 ESPERAR 2
 VARIABLE $ALERTA
@@ -474,11 +477,17 @@ variable $UnoUno 1
 accion id cmdIteracion clic M2
 esperar 1
 accion id cmdIteracion clic M3
+ESPERAR 1 
+accion id cmdIteracion clic M3
+ESPERAR 1 
+accion id cmdIteracion clic M3
+ESPERAR 1
 CANTIDADPOPUPS GUARDAREN $POPUP
 SI COMPARAR IGUAL $POPUP $CincoCinco ENTONCES @SeguirExitoTry SINO @restarUnoCaso11
 @restarUnoCaso11
 funcion evalua $contador-$UnoUno guardaren $contador1
 VARIABLE $contador $contador1
+
 si comparar igual $contador1 $cerocero @SalirErrorCaso11 sino @generarTryCaso11
 @SeguirExitoTry
 VARIABLE $ALERTA
@@ -495,7 +504,11 @@ CONTINUAREN @FinalCaso11
 @SIGUIENTEPASO11
 @@----------------------cliente clarify
 @SIGUIENTE11
+
 irpopup 4
+CANTIDADPOPUPS GUARDAREN $POPUP
+
+
 @@---ESTAMOS FORMZANDO AL SISTEMA A EJECUTAR ESTE EVENTO
 ACCION ID btnCerrar CLIC
 ESPERAR 1
@@ -503,6 +516,20 @@ ACCION ID btnCerrar CLIC
 ELIMINARULTIMOPOPUP
 @@$$$$$SE #########################################
 irpopup 3
+
+VARIABLE $CUATRO 4
+CANTIDADPOPUPS GUARDAREN $POPUPCUATRO
+ESPERAR 1
+
+SI COMPARAR IGUAL $POPUPCUATRO $CUATRO ENTONCES @ABRIOCLARIFY SINO @NOABRIOERROR
+@NOABRIOERROR
+VARIABLE $ESTADO "ERROR"
+VARIABLE $SUBESTADO "NO ABRIO VENTANA 4 LATENCIA SISTEMA"
+VARIABLE $BACKOFFICE "-BOOT-"
+CONTINUAREN @FINALERRORVENTANA4
+@ABRIOCLARIFY
+
+
 @@--------@@#######################-----caso 6-------------------esperando correccion
 @@
 VALORCELDA id dgInteracion 1 1 GUARDAREN $FECHA
@@ -556,6 +583,8 @@ variable $cinco 5
 @generarTryInteracion
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
 esperar 1
+ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
+esperar 3
 ACCIONENTABLA ID dgInteracion "POSTPAGO - INFORMACION - TRANSACCIONES DE LINEAS/ EQUIPOS - MIGRACION DE PLAN" 0 TAGNAME A[INDICE:0] CLIC
 esperar 3
 CANTIDADPOPUPS GUARDAREN $POPUP
@@ -997,6 +1026,7 @@ variable $CF1 $CF
 @FinalCaso20
 @FinalErrorNoSelecionoplan
 @FINALAPADECE
+@FINALERRORVENTANA4
 @@Etiquetas final con errores
 @finalErrorPopups
 @@ErrorerVentanas
@@ -1014,4 +1044,6 @@ variable $CF1 $CF
 @FinalCasOEXITOSO
 @FINALCARGARFRAME31
 @FINALCARGARFRAME3
+
+
 TERMINAR

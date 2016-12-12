@@ -40,11 +40,18 @@ SI COMPARAR IGUAL $POPUP $TRES ENTONCES @ELIMINAPOPUP SINO @continuarCasoPopup
 @ELIMINAPOPUP
 irpopup 2
 ACCION ID btnCerrar CLIC
+ESPERAR 1 
+ACCION ID btnCerrar CLIC
+ESPERAR 1
+ACCION ID btnCerrar CLIC
+ESPERAR 1
 ELIMINARULTIMOPOPUP
 @continuarCasoPopup
 @@  [spnFechaHoraActual ] id fecha actua
 @@se busco el cliente
 @@---guardar variable dni
+LISTARPOPUPS
+IRPOPUP 1 
 esperar 2
 recuadro i1
 esperar 1
@@ -250,6 +257,7 @@ variable $MIGRACION "MIGRACION"
 VARIABLE $ESTADO "APROBADO"
 VARIABLE $OFICINA "TLVTAS MDY MASIVO"
 variable $OFICINA1 "TELEVENTAS MDY"
+
 @@VALOR EN CELDA OBTENEMOS LAS VARIABLE PARA SU VALIDACION
 VALORCELDA id dgLista 1 4 GUARDAREN $VarMigracion
 VALORCELDA id dgLista 1 5 GUARDAREN $VarEstado
@@ -257,42 +265,47 @@ VALORCELDA id dgLista 1 10 GUARDAREN $VarOficina
 VALORCELDA id dgLista 1 13 GUARDAREN $VarFechaRegistro
 @@---comparamos 
 @@ ############################# CASO 6 Caida - punto de venta---------------------
-si comparar identico $VarOficina $OFICINA entonces @Continuartodo6 sino @VerCaso6
-@VerCaso6
-si comparar identico $VarOficina $OFICINA1 entonces @continuar2 sino @ReporteCaso6
-@ReporteCaso6
-VARIABLE $ESTADO "CAIDA"
-VARIABLE $SUBESTADO "PUNTO DE VENTA"
-continuaren @FinalCaso6
+LISTARPOPUPS
+
+CANTIDADPOPUPS GUARDAREN $POPUP3
+variable $tres 3
+SI COMPARAR IGUAL $POPUP3 $tres entonces @continuaracciontabla11 sino @noacciontabla11
+@continuaracciontabla11
 ESPERAR 1
-@continuar2
-@Continuartodo6
-ESPERAR 2
+ELIMINARULTIMOPOPUP
+
+@noacciontabla11
+
+
 
 @@    71262889
 @@---verificar nuemro de celular
 @@condicionar tabla
-si comparar identico $VarOficina $OFICINA entonces @Buscar1 sino @SaltarOtro
-@Buscar1 
-ACCIONENTABLA ID dgLista "%MIGRACION,APROBADO,TLVTAS MDY MASIVO%" 0 TAGNAME A[INDICE:0] CLIC
+
+ACCIONENTABLA ID dgLista "%MIGRACION%,%APROBADO%,%MDY%" 0 TAGNAME A[INDICE:0] CLIC
 ESPERAR 1
-ACCIONENTABLA ID dgLista "%MIGRACION,APROBADO,TLVTAS MDY MASIVO%" 0 TAGNAME A[INDICE:0] CLIC
-continuaren @Correcto1
-@SaltarOtro
-si comparar identico $VarOficina $OFICINA1 entonces @buscar2 sino @SatltarTodoError 
-@buscar2
-ACCIONENTABLA ID dgLista "%MIGRACION,APROBADO,TELEVENTAS MDY%" 0 TAGNAME A[INDICE:0] CLIC
+ACCIONENTABLA ID dgLista "%MIGRACION%,%APROBADO%,%MDY%" 0 TAGNAME A[INDICE:0] CLIC
+ESPERAR 1
+CANTIDADPOPUPS GUARDAREN $POPUP3
+LISTARPOPUPS
+variable $tres 3
+si comparar identico $POPUP3 $tres entonces @continuaracciontabla1 sino @noacciontabla1
+@noacciontabla1
+ACCIONENTABLA ID dgLista "%MIGRACION%,%APROBADO%,%CAC%" 0 TAGNAME A[INDICE:0] CLIC
 esperar 1
-ACCIONENTABLA ID dgLista "%MIGRACION,APROBADO,TELEVENTAS MDY%" 0 TAGNAME A[INDICE:0] CLIC
-continuaren @Correcto2
-@SatltarTodoError
-variable $ESTADO "REINTENTAR"
-variable $SUBESTADO "No se encontro Filas Candidatas"
-CONTINUAREN @FinErrorTablaLista
+ACCIONENTABLA ID dgLista "%MIGRACION%,%APROBADO%,%CAC%" 0 TAGNAME A[INDICE:0] CLIC
+esperar 1
 
-@Correcto1
-@Correcto2
-
+CANTIDADPOPUPS GUARDAREN $POPUP
+variable $tres 3
+si comparar identico $POPUP $tres entonces @continuaracciontabla2 sino @noacciontabla2
+@noacciontabla2
+variable $ESTADO "ERROR"
+variable $SUBESTADO "NO EXISTE FILAS CANDIDATAS  POSIBLE PUNTO DE VENTA"
+variable $CAC $VarOficina
+CONTINUAREN @finalsinfilas
+@continuaracciontabla2
+@continuaracciontabla1
 
 ESPERAR 1
 recuadro -1
@@ -301,6 +314,30 @@ encontrar id 0
 ESPERAR 2 
 listarpopups
 irpopup 2
+
+ATRIBUTO id txtPuntoVenta value GUARDAREN $PUNTODEVENTA
+VARIABLE $MDY "TLV"
+VARIABLE $CAC "CAC"
+VARIABLE $TEL "TEL"
+
+
+FUNCION EXTRAE $PUNTODEVENTA 0 3 GUARDAREN $INICIALPV
+
+SI COMPARAR IGUAL $MDY $INICIALPV ENTONCES @CONT01 SINO @VERIFICA01
+@VERIFICA01
+SI COMPARAR IGUAL $CAC $INICIALPV ENTONCES @CONT02 SINO @VERIFICA02
+@VERIFICA02
+SI COMPARAR IGUAL $TEL $INICIALPV ENTONCES @CONT03 SINO @VERIFICA03
+@VERIFICA03
+ariable $ESTADO "CAIDA"
+variable $SUBESTADO "PUNTO DE VENTA"
+variable $CAC $PUNTODEVENTA
+CONTINUAREN @FINALPUNTODEVENTA
+@CONT01
+@CONT02
+@CONT03
+
+
 
 ATRIBUTO id txtNroSEC value GUARDAREN $VarNroSec
 
@@ -343,7 +380,6 @@ esperar 1
 
 10/01/2016
 FUNCION EXTRAE $FECHAGESTION 0 10 GUARDAREN $fechaSoli
-
 
 VARIABLE $FECHADESOLICITUD $fechaSoli
 FUNCION EXTRAE $VarFechaAct 0 10 GUARDAREN $fechaActi
@@ -392,6 +428,8 @@ VARIABLE $SUBESTADO "CONCRETADO"
 @FinalCaso8
 @FinalCaso9
 @FINALMENSAJE
+@finalsinfilas
+@FINALPUNTODEVENTA
 
 @@--&&&&&&&&&&&&&&&&&&&&&&&--final caidas errores
 @FinErrorTablaLista
@@ -399,4 +437,4 @@ VARIABLE $SUBESTADO "CONCRETADO"
 
 @@caidas por sistema latencia
 @SalirErrorCasoVen55
-terminar
+TERMINAR
