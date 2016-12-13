@@ -323,11 +323,11 @@ VARIABLE $TEL "TEL"
 
 FUNCION EXTRAE $PUNTODEVENTA 0 3 GUARDAREN $INICIALPV
 
-SI COMPARAR IGUAL $MDY $INICIALPV ENTONCES @CONT01 SINO @VERIFICA01
+SI COMPARAR identico $MDY $INICIALPV ENTONCES @CONT01 SINO @VERIFICA01
 @VERIFICA01
-SI COMPARAR IGUAL $CAC $INICIALPV ENTONCES @CONT02 SINO @VERIFICA02
+SI COMPARAR identico $CAC $INICIALPV ENTONCES @CONT02 SINO @VERIFICA02
 @VERIFICA02
-SI COMPARAR IGUAL $TEL $INICIALPV ENTONCES @CONT03 SINO @VERIFICA03
+SI COMPARAR identico $TEL $INICIALPV ENTONCES @CONT03 SINO @VERIFICA03
 @VERIFICA03
 ariable $ESTADO "CAIDA"
 variable $SUBESTADO "PUNTO DE VENTA"
@@ -378,7 +378,7 @@ CONTINUAREN @FinalPortal
 @ConNumPortar
 esperar 1
 
-10/01/2016
+@@10/01/2016
 FUNCION EXTRAE $FECHAGESTION 0 10 GUARDAREN $fechaSoli
 
 VARIABLE $FECHADESOLICITUD $fechaSoli
@@ -395,10 +395,11 @@ VARIABLE $PONDERADO $PLANSINIGV
 VARIABLE $MODALIDAD $VarOficina
 VARIABLE $DEPDEVENTA "LIMA"
 VARIABLE $ESTADOVENTA "VENTA"
-VARIABLE $CAC "TLVTAS MDY MASIVO"
+VARIABLE $CAC $PUNTODEVENTA
 VARIABLE $CAMPAA "MIGRACION ESPECIAL"
 VARIABLE $ESTADO "ACTIVO"
 VARIABLE $SUBESTADO "CONCRETADO"
+
 @@----Fecha de solicitud = es igual a la fecha de gestión
 @@----Fecha de activación= fecha que dicta el sistema 
 @@----NUEVA LINEA= es el número de celular-número del cliente
@@ -406,8 +407,6 @@ VARIABLE $SUBESTADO "CONCRETADO"
 @@----Tipo de producto= se coloca MIGRACION DE PRE A POST
 @@----Costo del equipo= S/. 1.00
 @@----Plan adquirido= es el plan que se visualiza del sistema del SIACT
-@@----Costo del Plan= Es el número del plan. Ejm PLAN 25, costo del plan S/. 25.00
-@@----Costo sin IGV= Costo del plan / 1.18 = ejemplo:   25/1.18
 @@----Ponderado=Costo sin IGV; ejemplo: 25/1.18
 @@----Modalidad= si es el CAC o Televentas, en este caso es TELEVENTAS MDY 
 @@----Departamento de Venta= Lima
