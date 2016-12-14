@@ -741,6 +741,7 @@ esperar 1
 accion id rdbSinTopeConsumo clic
 accion id rdbSinTopeConsumo clic
 ESPERAR 1
+
 @@ EMPEZAMOS CON EL PRIMER COMBO -----------------------------------------------------------------------------------------------------------
 si comparar igual $lblReintegroApadece $CERO entonces @SelecionarChip sino @SelecionarEquipo
 @SelecionarChip
@@ -777,6 +778,9 @@ accion id dgLista_optSel_13 clic
 accion id dgLista_optSel_13 clic 
 continuaren @SeDioClick05
 @ContinuaVerificando05
+
+
+
 si comparar identico $ClaroMax99Chip $5TONIVEL ENTONCES @DarClick06 sino @ContinuaVerificando06
 @DarClick06
 accion id dgLista_optSel_4 clic 
@@ -976,6 +980,7 @@ VARIABLE $ALERTA  $SINALERTA
 esperar 1
 accion id btnGrabar clic M5
 esperar 4
+
 accion id btnGrabar clic M10
 ESPERAR 7
 VARIABLE $ALERTA
